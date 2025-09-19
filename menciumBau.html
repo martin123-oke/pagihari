@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aku Mencium Bau Yang Enak</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5dc;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        canvas {
+            border: 2px solid #8B4513;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #8B4513;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Aku Mencium Bau Yang Enak</h1>
+        <canvas id="animationCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('animationCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Variabel animasi
+        let aromaWaves = [];
+        let childPosition = 0;
+        let aromaIntensity = 0;
+        let smileAnimation = 0;
+        
+        // Inisialisasi gelombang aroma
+        for (let i = 0; i < 20; i++) {
+            aromaWaves.push({
+                x: 450 + Math.random() * 100,
+                y: 280 + Math.random() * 40,
+                radius: Math.random() * 30 + 10,
+                alpha: Math.random() * 0.5 + 0.2,
+                speed: Math.random() * 0.5 + 0.3
+            });
+        }
+        
+        function drawHallway() {
+            // Lantai
+            ctx.fillStyle = '#E8D0AA';
+            ctx.fillRect(0, 350, canvas.width, 150);
+            
+            // Dinding
+            ctx.fillStyle = '#FFFACD';
+            ctx.fillRect(0, 0, canvas.width, 350);
+            
+            // Pintu kamar
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(50, 150, 80, 120);
+            ctx.fillStyle = '#A0522D';
+            ctx.fillRect(55, 155, 70, 110);
+            
+            // Meja tamu
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(300, 200, 150, 60);
+            ctx.fillStyle = '#DEB887';
+            ctx.fillRect(305, 205, 140, 50);
+            
+            // Kursi
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(250, 260, 50, 80);
+            ctx.fillRect(450, 260, 50, 80);
+            
+            // Lampu gantung
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(400, 50, 15, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#CCCCCC';
+            ctx.fillRect(395, 65, 10, 100);
+        }
+        
+        function drawChild() {
+            const childX = 150 + childPosition;
+            const childY = 280;
+            
+            // Badan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(childX - 15, childY - 30, 30, 50);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(childX, childY - 45, 20, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(childX, childY - 48, 22, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata tertutup (menyanyikan bau)
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.ellipse(childX - 7, childY - 47, 4, 1, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(childX + 7, childY - 47, 4, 1, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Bibir tersenyum
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.ellipse(childX, childY - 35, 6, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tangan dekat hidung
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.ellipse(childX - 20, childY - 25, 8, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(childX + 20, childY - 25, 8, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        function drawKitchenBackground() {
+            // Dinding dapur (terlihat dari jarak)
+            ctx.fillStyle = '#FFFACD';
+            ctx.fillRect(350, 0, 450, 350);
+            
+            // Kompor
+            ctx.fillStyle = '#444444';
+            ctx.fillRect(380, 270, 100, 20);
+            ctx.fillRect(390, 260, 80, 10);
+            
+            // Panci
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.ellipse(450, 290, 40, 25, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#ADD8E6';
+            ctx.beginPath();
+            ctx.ellipse(450, 290, 35, 20, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Sayuran
+            ctx.fillStyle = '#FF4500'; // Wortel
+            ctx.beginPath();
+            ctx.ellipse(430, 290, 8, 15, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#DEB887'; // Kentang
+            ctx.beginPath();
+            ctx.ellipse(470, 290, 12, 12, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Api
+            ctx.fillStyle = '#FF4500';
+            for (let i = 0; i < 5; i++) {
+                const flameX = 410 + Math.random() * 20;
+                const flameY = 275 + Math.random() * 10;
+                const size = Math.random() * 3 + 2;
+                
+                ctx.beginPath();
+                ctx.ellipse(flameX, flameY, size, size * 1.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        function updateAromaWaves() {
+            aromaWaves.forEach(wave => {
+                wave.radius += wave.speed;
+                wave.alpha -= 0.005;
+                
+                if (wave.radius > 100 || wave.alpha <= 0) {
+                    wave.radius = 10;
+                    wave.alpha = Math.random() * 0.5 + 0.2;
+                    wave.x = 450 + Math.random() * 100;
+                    wave.y = 280 + Math.random() * 40;
+                }
+            });
+        }
+        
+        function drawAromaWaves() {
+            aromaWaves.forEach(wave => {
+                ctx.save();
+                ctx.globalAlpha = wave.alpha;
+                ctx.strokeStyle = '#FFD700';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.restore();
+            });
+        }
+        
+        function animate() {
+            // Bersihkan canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Gambar latar belakang
+            drawHallway();
+            drawKitchenBackground();
+            
+            // Animasi aroma
+            updateAromaWaves();
+            
+            // Animasi anak berjalan
+            if (childPosition < 200) {
+                childPosition += 1.5;
+            }
+            
+            // Animasi senyum
+            smileAnimation += 0.1;
+            
+            // Gambar elemen-elemen
+            drawChild();
+            drawAromaWaves();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Mulai animasi
+        animate();
+    </script>
+</body>
+</html>
