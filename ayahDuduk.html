@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayah Duduk Di Meja Makan</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5dc;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        canvas {
+            border: 2px solid #8B4513;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #8B4513;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ayah Duduk Di Meja Makan</h1>
+        <canvas id="animationCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('animationCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Variabel animasi
+        let fatherReading = 0;
+        let childApproaching = false;
+        let childPosition = 0;
+        let coffeeSteam = [];
+        let newspaperFlip = 0;
+        
+        // Inisialisasi uap kopi
+        for (let i = 0; i < 12; i++) {
+            coffeeSteam.push({
+                x: 520 + Math.random() * 40,
+                y: 220 + Math.random() * 30,
+                radius: Math.random() * 15 + 5,
+                alpha: Math.random() * 0.6 + 0.2,
+                speed: Math.random() * 0.3 + 0.1
+            });
+        }
+        
+        function drawDiningRoom() {
+            // Lantai
+            ctx.fillStyle = '#E8D0AA';
+            ctx.fillRect(0, 350, canvas.width, 150);
+            
+            // Dinding
+            ctx.fillStyle = '#FFFACD';
+            ctx.fillRect(0, 0, canvas.width, 350);
+            
+            // Meja makan
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(200, 280, 400, 30);
+            
+            // Kursi ayah
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(250, 310, 50, 80);
+            
+            // Kursi anak
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(500, 310, 50, 80);
+            
+            // Rak buku
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(50, 50, 150, 20);
+            ctx.fillRect(50, 80, 150, 20);
+            ctx.fillRect(50, 110, 150, 20);
+            
+            // Lampu gantung
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(400, 30, 15, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#CCCCCC';
+            ctx.fillRect(395, 45, 10, 80);
+            
+            // Jendela
+            ctx.fillStyle = '#ADD8E6';
+            ctx.fillRect(600, 50, 180, 120);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(610, 60, 160, 100);
+        }
+        
+        function drawFather() {
+            const fatherX = 275;
+            const fatherY = 320;
+            
+            // Badan
+            ctx.fillStyle = '#4682B4';
+            ctx.fillRect(fatherX - 25, fatherY - 40, 50, 60);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(fatherX, fatherY - 50, 25, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(fatherX, fatherY - 53, 27, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.ellipse(fatherX - 10, fatherY - 52, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(fatherX + 10, fatherY - 52, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Senyum
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.ellipse(fatherX, fatherY - 42, 8, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tangan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.ellipse(fatherX - 30, fatherY - 30, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(fatherX + 30, fatherY - 30, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Surat kabar
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(fatherX - 35, fatherY - 20, 70, 50);
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(fatherX - 35, fatherY - 20, 70, 50);
+            
+            // Tulisan surat kabar
+            ctx.fillStyle = '#000000';
+            ctx.font = '10px Arial';
+            ctx.fillText('SURAT KABAR', fatherX - 25, fatherY - 10);
+            ctx.fillText('HARI INI', fatherX - 15, fatherY);
+        }
+        
+        function drawChild() {
+            const childX = 525;
+            const childY = 320;
+            
+            // Badan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(childX - 15, childY - 30, 30, 50);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(childX, childY - 45, 20, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(childX, childY - 48, 22, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.ellipse(childX - 7, childY - 47, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(childX + 7, childY - 47, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Senyum
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.ellipse(childX, childY - 35, 8, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tangan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.ellipse(childX - 20, childY - 25, 8, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(childX + 20, childY - 25, 8, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Kaki
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(childX - 12, childY + 20, 8, 15);
+            ctx.fillRect(childX + 4, childY + 20, 8, 15);
+        }
+        
+        function drawCoffeeCup() {
+            // Cangkir kopi
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.ellipse(520, 220, 20, 25, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Isi kopi
+            ctx.fillStyle = '#8B0000';
+            ctx.beginPath();
+            ctx.ellipse(520, 220, 16, 20, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Garpu kopi
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.ellipse(520, 215, 5, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        function updateCoffeeSteam() {
+            coffeeSteam.forEach(steam => {
+                steam.y -= steam.speed;
+                steam.alpha -= 0.004;
+                
+                if (steam.y < 180 || steam.alpha <= 0) {
+                    steam.y = 220 + Math.random() * 30;
+                    steam.alpha = Math.random() * 0.6 + 0.2;
+                    steam.x = 520 + Math.random() * 40;
+                }
+            });
+        }
+        
+        function drawCoffeeSteam() {
+            coffeeSteam.forEach(steam => {
+                ctx.save();
+                ctx.globalAlpha = steam.alpha;
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.arc(steam.x, steam.y, steam.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+        }
+        
+        function animate() {
+            // Bersihkan canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Gambar latar belakang
+            drawDiningRoom();
+            drawCoffeeCup();
+            
+            // Animasi ayah membaca surat kabar
+            newspaperFlip += 0.03;
+            
+            // Animasi anak berjalan
+            if (!childApproaching && childPosition < 300) {
+                childPosition += 2;
+                if (childPosition > 250) {
+                    childApproaching = true;
+                }
+            }
+            
+            // Gambar elemen-elemen
+            drawFather();
+            drawChild();
+            
+            // Update dan gambar uap kopi
+            updateCoffeeSteam();
+            drawCoffeeSteam();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Mulai animasi
+        animate();
+    </script>
+</body>
+</html>
