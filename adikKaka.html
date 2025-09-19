@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aku Duduk di Samping Kakak</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5dc;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        canvas {
+            border: 2px solid #8B4513;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #8B4513;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Aku Duduk di Samping Kakak</h1>
+        <canvas id="animationCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('animationCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Variabel animasi
+        let sisterDrawing = 0;
+        let brotherWatching = false;
+        let brotherPosition = 0;
+        let sharedColors = [];
+        let conversationBubble = null;
+        
+        function drawLivingRoom() {
+            // Lantai
+            ctx.fillStyle = '#E8D0AA';
+            ctx.fillRect(0, 350, canvas.width, 150);
+            
+            // Dinding
+            ctx.fillStyle = '#FFFACD';
+            ctx.fillRect(0, 0, canvas.width, 350);
+            
+            // Meja belajar
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(250, 200, 300, 40);
+            
+            // Kursi kakak
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(200, 240, 50, 80);
+            
+            // Kursi adik
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(450, 240, 50, 80);
+            
+            // Rak buku
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(50, 50, 150, 20);
+            ctx.fillRect(50, 80, 150, 20);
+            ctx.fillRect(50, 110, 150, 20);
+            
+            // Lampu gantung
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(400, 30, 15, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#CCCCCC';
+            ctx.fillRect(395, 45, 10, 80);
+            
+            // Jendela
+            ctx.fillStyle = '#ADD8E6';
+            ctx.fillRect(600, 50, 180, 120);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(610, 60, 160, 100);
+        }
+        
+        function drawSister() {
+            const sisterX = 225;
+            const sisterY = 280;
+            
+            // Badan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(sisterX - 20, sisterY - 40, 40, 60);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(sisterX, sisterY - 50, 25, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut panjang
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(sisterX, sisterY - 53, 28, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.ellipse(sisterX - 8, sisterY - 52, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(sisterX + 8, sisterY - 52, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Senyum
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.ellipse(sisterX, sisterY - 42, 8, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tangan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.ellipse(sisterX - 25, sisterY - 30, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(sisterX + 25, sisterY - 30, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Baju
+            ctx.fillStyle = '#9370DB';
+            ctx.fillRect(sisterX - 20, sisterY - 20, 40, 40);
+        }
+        
+        function drawBrother() {
+            const brotherX = 475;
+            const brotherY = 280;
+            
+            // Badan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(brotherX - 15, brotherY - 30, 30, 50);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(brotherX, brotherY - 45, 20, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut pendek
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(brotherX, brotherY - 48, 22, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.ellipse(brotherX - 7, brotherY - 47, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(brotherX + 7, brotherY - 47, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Senyum
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.ellipse(brotherX, brotherY - 35, 8, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tangan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.ellipse(brotherX - 20, brotherY - 25, 8, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(brotherX + 20, brotherY - 25, 8, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Kaki
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(brotherX - 12, brotherY + 20, 8, 15);
+            ctx.fillRect(brotherX + 4, brotherY + 20, 8, 15);
+        }
+        
+        function drawDrawingBook() {
+            // Buku gambar
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(300, 150, 200, 150);
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(300, 150, 200, 150);
+            
+            // Judul buku
+            ctx.fillStyle = '#8B4513';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('BUKU GAMBAR', 325, 175);
+            
+            // Gambar di dalam buku
+            ctx.fillStyle = '#FFEFD5';
+            ctx.fillRect(310, 185, 180, 110);
+            
+            // Gambar sederhana (pemandangan)
+            ctx.fillStyle = '#87CEEB'; // Langit
+            ctx.fillRect(315, 190, 170, 40);
+            
+            ctx.fillStyle = '#228B22'; // Rumput
+            ctx.fillRect(315, 230, 170, 60);
+            
+            // Matahari
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(360, 210, 15, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Awan
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.arc(340, 195, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(365, 195, 12, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(390, 195, 8, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Bentuk yang ditambahkan oleh adik
+            ctx.fillStyle = '#FF69B4'; // Pink
+            ctx.beginPath();
+            ctx.arc(380, 250, 8, 8, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#00FF00'; // Hijau
+            ctx.beginPath();
+            ctx.rect(350, 245, 15, 15);
+            ctx.fill();
+            
+            ctx.fillStyle = '#0000FF'; // Biru
+            ctx.beginPath();
+            ctx.arc(420, 250, 6, 6, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        function drawSharedColors() {
+            // Pensil warna yang dipakai bersama
+            const sharedColors = ['#FF69B4', '#00FF00', '#0000FF'];
+            
+            sharedColors.forEach((color, index) => {
+                const x = 50 + (index % 3) * 60;
+                const y = 150 + Math.floor(index / 3) * 30;
+                
+                // Tubuh pensil
+                ctx.fillStyle = color;
+                ctx.fillRect(x, y, 40, 10);
+                
+                // Ujung pensil
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(x + 35, y, 5, 10);
+                
+                // Label warna
+                ctx.fillStyle = '#000000';
+                ctx.font = '10px Arial';
+                ctx.fillText(color.toUpperCase(), x, y + 22);
+            });
+        }
+        
+        function drawConversation() {
+            if (conversationBubble) {
+                // Balon percakapan
+                ctx.fillStyle = '#FFFFFF';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 1;
+                
+                ctx.beginPath();
+                ctx.roundRect(350, 120, 100, 40, 10);
+                ctx.fill();
+                ctx.stroke();
+                
+                // Panah balon
+                ctx.beginPath();
+                ctx.moveTo(350, 135);
+                ctx.lineTo(340, 130);
+                ctx.lineTo(350, 125);
+                ctx.fill();
+                
+                // Teks percakapan
+                ctx.fillStyle = '#000000';
+                ctx.font = '12px Arial';
+                ctx.fillText(conversationBubble, 360, 138);
+            }
+        }
+        
+        function animate() {
+            // Bersihkan canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Gambar latar belakang
+            drawLivingRoom();
+            drawSister();
+            drawBrother();
+            drawDrawingBook();
+            drawSharedColors();
+            
+            // Animasi percakapan
+            if (brotherPosition > 200 && brotherPosition < 250) {
+                conversationBubble = "Kak, boleh saya ikut?";
+            } else if (brotherPosition >= 250) {
+                conversationBubble = "Ya, silahkan!";
+            }
+            
+            drawConversation();
+            
+            // Animasi berjalan
+            if (!brotherWatching && brotherPosition < 300) {
+                brotherPosition += 2;
+                if (brotherPosition > 200) {
+                    brotherWatching = true;
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Mulai animasi
+        animate();
+    </script>
+</body>
+</html>
