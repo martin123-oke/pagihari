@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ibu Sedang Memasak Di Dapur</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5dc;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        canvas {
+            border: 2px solid #8B4513;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #8B4513;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ibu Sedang Memasak Di Dapur</h1>
+        <canvas id="animationCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('animationCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Variabel animasi
+        let spatulaAngle = 0;
+        let steamParticles = [];
+        let vegetableRotation = 0;
+        let fireAnimation = 0;
+        
+        // Inisialisasi partikel uap
+        for (let i = 0; i < 15; i++) {
+            steamParticles.push({
+                x: 450 + Math.random() * 60,
+                y: 280 + Math.random() * 40,
+                speed: Math.random() * 0.5 + 0.2,
+                size: Math.random() * 3 + 2,
+                opacity: Math.random() * 0.5 + 0.3
+            });
+        }
+        
+        function drawKitchen() {
+            // Lantai
+            ctx.fillStyle = '#E8D0AA';
+            ctx.fillRect(0, 350, canvas.width, 150);
+            
+            // Dinding
+            ctx.fillStyle = '#FFFACD';
+            ctx.fillRect(0, 0, canvas.width, 350);
+            
+            // Lemari dapur
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(50, 50, 200, 100);
+            ctx.fillRect(50, 170, 200, 100);
+            
+            // Pintu lemari
+            ctx.fillStyle = '#A0522D';
+            ctx.fillRect(60, 60, 180, 80);
+            ctx.fillRect(60, 180, 180, 80);
+            
+            // Pegangan pintu
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(120, 110, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(120, 230, 5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Meja kerja
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(300, 300, 400, 20);
+            ctx.fillRect(300, 280, 20, 40);
+            
+            // Alat masak lainnya
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(650, 200, 80, 60); // Oven
+            
+            // Kompor gas
+            ctx.fillStyle = '#444444';
+            ctx.fillRect(370, 270, 100, 20);
+            ctx.fillRect(380, 260, 80, 10);
+        }
+        
+        function drawMother() {
+            const motherX = 250;
+            const motherY = 250;
+            
+            // Badan
+            ctx.fillStyle = '#9370DB';
+            ctx.fillRect(motherX - 15, motherY - 20, 30, 40);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(motherX, motherY - 40, 18, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(motherX, motherY - 45, 20, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.ellipse(motherX - 6, motherY - 43, 3, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(motherX + 6, motherY - 43, 3, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Bibir
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.ellipse(motherX, motherY - 32, 4, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tangan memegang spatula
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.ellipse(motherX - 25, motherY - 15, 8, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Spatula
+            ctx.save();
+            ctx.translate(motherX - 25, motherY - 15);
+            ctx.rotate(spatulaAngle);
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(-15, -2, 15, 4);
+            ctx.fillStyle = '#CD853F';
+            ctx.fillRect(-15, -6, 5, 12);
+            ctx.restore();
+        }
+        
+        function drawPot() {
+            // Panci
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.ellipse(450, 290, 40, 25, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Isi air
+            ctx.fillStyle = '#ADD8E6';
+            ctx.beginPath();
+            ctx.ellipse(450, 290, 35, 20, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tutup panci
+            ctx.fillStyle = '#666666';
+            ctx.beginPath();
+            ctx.ellipse(450, 265, 25, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Pegangan tutup
+            ctx.fillStyle = '#999999';
+            ctx.fillRect(445, 257, 10, 8);
+        }
+        
+        function drawVegetables() {
+            // Wortel
+            ctx.fillStyle = '#FF4500';
+            ctx.beginPath();
+            ctx.ellipse(430, 290, 8, 15, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Kentang
+            ctx.fillStyle = '#DEB887';
+            ctx.beginPath();
+            ctx.ellipse(470, 290, 12, 12, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Bawang bombay
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.ellipse(450, 310, 10, 10, 0, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        function drawFire() {
+            // Api di kompor
+            ctx.fillStyle = '#FF4500';
+            for (let i = 0; i < 5; i++) {
+                const flameX = 410 + Math.random() * 20;
+                const flameY = 275 + Math.random() * 10;
+                const size = Math.random() * 3 + 2;
+                
+                ctx.beginPath();
+                ctx.ellipse(flameX, flameY, size, size * 1.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        function updateSteamParticles() {
+            steamParticles.forEach(particle => {
+                particle.y -= particle.speed;
+                particle.opacity -= 0.002;
+                
+                if (particle.y < 200 || particle.opacity <= 0) {
+                    particle.x = 450 + Math.random() * 60;
+                    particle.y = 280 + Math.random() * 40;
+                    particle.opacity = Math.random() * 0.5 + 0.3;
+                }
+            });
+        }
+        
+        function drawSteam() {
+            steamParticles.forEach(particle => {
+                ctx.save();
+                ctx.globalAlpha = particle.opacity;
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+        }
+        
+        function animate() {
+            // Bersihkan canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Gambar latar belakang
+            drawKitchen();
+            
+            // Animasi api
+            fireAnimation += 0.1;
+            
+            // Animasi spatula
+            spatulaAngle = Math.sin(fireAnimation * 2) * 0.3;
+            
+            // Gambar elemen-elemen
+            drawPot();
+            drawVegetables();
+            drawFire();
+            drawMother();
+            
+            // Update dan gambar uap
+            updateSteamParticles();
+            drawSteam();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Mulai animasi
+        animate();
+    </script>
+</body>
+</html>
