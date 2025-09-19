@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aku Bangun Tidur</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0e6d2;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        canvas {
+            border: 2px solid #8B4513;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #8B4513;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Aku Bangun Tidur</h1>
+        <canvas id="animationCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('animationCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Variabel animasi
+        let eyeState = 0; // 0=closed, 1=opening, 2=open
+        let stretchProgress = 0;
+        let lightIntensity = 0;
+        let alarmTime = 0;
+        
+        function drawRoom() {
+            // Lantai
+            ctx.fillStyle = '#E8D0AA';
+            ctx.fillRect(0, 350, canvas.width, 150);
+            
+            // Dinding
+            ctx.fillStyle = '#F5DEB3';
+            ctx.fillRect(0, 0, canvas.width, 350);
+            
+            // Jendela
+            ctx.fillStyle = '#ADD8E6';
+            ctx.fillRect(600, 50, 180, 120);
+            
+            // Tirai jendela
+            ctx.fillStyle = '#FFFFFF';
+            ctx.globalAlpha = 0.7;
+            ctx.fillRect(610, 60, 160, 100);
+            ctx.globalAlpha = 1;
+            
+            // Meja samping tempat tidur
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(50, 330, 120, 20);
+            ctx.fillRect(50, 310, 20, 40);
+            
+            // Buku di meja
+            ctx.fillStyle = '#CD853F';
+            ctx.fillRect(70, 315, 30, 25);
+            ctx.fillStyle = '#8B4513';
+            ctx.font = '12px Arial';
+            ctx.fillText('Buku', 72, 332);
+            
+            // Jam dinding
+            ctx.fillStyle = '#4682B4';
+            ctx.beginPath();
+            ctx.arc(750, 80, 25, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.arc(750, 80, 20, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#000000';
+            ctx.font = '14px Arial';
+            ctx.fillText('6:00', 738, 85);
+        }
+        
+        function drawBed() {
+            // Kasur
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(200, 300, 300, 80);
+            
+            // Seprei
+            ctx.fillStyle = '#FFB6C1';
+            ctx.fillRect(205, 305, 290, 70);
+            
+            // Bantal
+            ctx.fillStyle = '#FF69B4';
+            ctx.fillRect(210, 295, 80, 15);
+        }
+        
+        function drawCharacter() {
+            const centerX = 350;
+            const centerY = 340;
+            
+            // Badan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(centerX - 20, centerY - 30, 40, 60);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY - 40, 25, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY - 45, 28, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata
+            if (eyeState === 0 || eyeState === 1) { // Mata tertutup atau sedang dibuka
+                ctx.fillStyle = '#000000';
+                ctx.beginPath();
+                ctx.ellipse(centerX - 8, centerY - 42, 4, 1, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(centerX + 8, centerY - 42, 4, 1, 0, 0, Math.PI * 2);
+                ctx.fill();
+            } else { // Mata terbuka
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.ellipse(centerX - 8, centerY - 42, 4, 3, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(centerX + 8, centerY - 42, 4, 3, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillStyle = '#000000';
+                ctx.beginPath();
+                ctx.ellipse(centerX - 8, centerY - 42, 2, 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(centerX + 8, centerY - 42, 2, 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Mulut
+            if (stretchProgress > 0.5) {
+                ctx.fillStyle = '#FF6347';
+                ctx.beginPath();
+                ctx.ellipse(centerX, centerY - 32, 5, 3, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Tangan saat meregang
+            if (stretchProgress > 0) {
+                ctx.fillStyle = '#FFE4B5';
+                ctx.beginPath();
+                ctx.ellipse(centerX - 30, centerY - 20, 8, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(centerX + 30, centerY - 20, 8, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        function drawMorningLight() {
+            // Cahaya pagi dari jendela
+            ctx.globalAlpha = lightIntensity * 0.3;
+            ctx.fillStyle = '#FFFF99';
+            ctx.fillRect(600, 50, 180, 120);
+            ctx.globalAlpha = 1;
+        }
+        
+        function animate() {
+            // Bersihkan canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Gambar latar belakang
+            drawRoom();
+            drawBed();
+            
+            // Animasi bangun tidur
+            if (alarmTime < 100) {
+                alarmTime++;
+                if (alarmTime > 80 && eyeState === 0) {
+                    eyeState = 1;
+                }
+                if (alarmTime > 90 && eyeState === 1) {
+                    eyeState = 2;
+                }
+                if (alarmTime > 95) {
+                    stretchProgress = (alarmTime - 95) / 5;
+                }
+            }
+            
+            // Animasi cahaya pagi
+            if (lightIntensity < 1) {
+                lightIntensity += 0.005;
+            }
+            
+            drawMorningLight();
+            drawCharacter();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Mulai animasi
+        animate();
+    </script>
+</body>
+</html>
