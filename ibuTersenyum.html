@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ibu Tersenyum Kepadaku</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5dc;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        canvas {
+            border: 2px solid #8B4513;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #8B4513;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ibu Tersenyum Kepadaku</h1>
+        <canvas id="animationCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('animationCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Variabel animasi
+        let motherSmile = 0;
+        let childRunning = false;
+        let childPosition = 0;
+        let heartParticles = [];
+        let welcomeGesture = 0;
+        
+        // Inisialisasi partikel hati
+        for (let i = 0; i < 15; i++) {
+            heartParticles.push({
+                x: 450 + Math.random() * 60,
+                y: 280 + Math.random() * 40,
+                size: Math.random() * 4 + 2,
+                alpha: Math.random() * 0.7 + 0.3,
+                speed: Math.random() * 0.5 + 0.2,
+                rotation: Math.random() * Math.PI * 2
+            });
+        }
+        
+        function drawKitchen() {
+            // Lantai
+            ctx.fillStyle = '#E8D0AA';
+            ctx.fillRect(0, 350, canvas.width, 150);
+            
+            // Dinding
+            ctx.fillStyle = '#FFFACD';
+            ctx.fillRect(0, 0, canvas.width, 350);
+            
+            // Lemari dapur
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(50, 50, 200, 100);
+            ctx.fillRect(50, 170, 200, 100);
+            
+            // Pintu lemari
+            ctx.fillStyle = '#A0522D';
+            ctx.fillRect(60, 60, 180, 80);
+            ctx.fillRect(60, 180, 180, 80);
+            
+            // Pegangan pintu
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(120, 110, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(120, 230, 5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Meja kerja
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(300, 300, 400, 20);
+            ctx.fillRect(300, 280, 20, 40);
+            
+            // Oven
+            ctx.fillStyle = '#444444';
+            ctx.fillRect(650, 200, 80, 60);
+            
+            // Kompor gas
+            ctx.fillStyle = '#444444';
+            ctx.fillRect(370, 270, 100, 20);
+            ctx.fillRect(380, 260, 80, 10);
+        }
+        
+        function drawMother() {
+            const motherX = 450;
+            const motherY = 250;
+            
+            // Badan
+            ctx.fillStyle = '#9370DB';
+            ctx.fillRect(motherX - 20, motherY - 30, 40, 60);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(motherX, motherY - 40, 22, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(motherX, motherY - 45, 24, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.ellipse(motherX - 8, motherY - 43, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(motherX + 8, motherY - 43, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Senyum ibu
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.ellipse(motherX, motherY - 32, 8, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tangan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.ellipse(motherX - 30, motherY - 20, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(motherX + 30, motherY - 20, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Gestur menyapa
+            ctx.save();
+            ctx.translate(motherX + 30, motherY - 20);
+            ctx.rotate(Math.sin(welcomeGesture) * 0.3);
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(0, -5, 25, 10);
+            ctx.restore();
+        }
+        
+        function drawChild() {
+            const childX = 150 + childPosition;
+            const childY = 280;
+            
+            // Badan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(childX - 15, childY - 30, 30, 50);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(childX, childY - 45, 20, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(childX, childY - 48, 22, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.ellipse(childX - 7, childY - 43, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(childX + 7, childY - 43, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Senyum anak
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.ellipse(childX, childY - 35, 8, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tangan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.ellipse(childX - 20, childY - 25, 8, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(childX + 20, childY - 25, 8, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Kaki jika berlari
+            if (childRunning) {
+                ctx.fillStyle = '#FFE4B5';
+                ctx.fillRect(childX - 12, childY + 20, 8, 15);
+                ctx.fillRect(childX + 4, childY + 20, 8, 15);
+            }
+        }
+        
+        function drawPot() {
+            // Panci
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.ellipse(450, 290, 40, 25, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#ADD8E6';
+            ctx.beginPath();
+            ctx.ellipse(450, 290, 35, 20, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tutup panci
+            ctx.fillStyle = '#666666';
+            ctx.beginPath();
+            ctx.ellipse(450, 265, 25, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Pegangan tutup
+            ctx.fillStyle = '#999999';
+            ctx.fillRect(445, 257, 10, 8);
+        }
+        
+        function drawVegetables() {
+            // Wortel
+            ctx.fillStyle = '#FF4500';
+            ctx.beginPath();
+            ctx.ellipse(430, 290, 8, 15, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Kentang
+            ctx.fillStyle = '#DEB887';
+            ctx.beginPath();
+            ctx.ellipse(470, 290, 12, 12, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Bawang bombay
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.ellipse(450, 310, 10, 10, 0, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        function drawFire() {
+            // Api di kompor
+            ctx.fillStyle = '#FF4500';
+            for (let i = 0; i < 5; i++) {
+                const flameX = 410 + Math.random() * 20;
+                const flameY = 275 + Math.random() * 10;
+                const size = Math.random() * 3 + 2;
+                
+                ctx.beginPath();
+                ctx.ellipse(flameX, flameY, size, size * 1.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        function updateHeartParticles() {
+            heartParticles.forEach(particle => {
+                particle.rotation += 0.02;
+                particle.x += Math.sin(particle.rotation) * 0.5;
+                particle.y -= particle.speed;
+                particle.alpha -= 0.003;
+                
+                if (particle.y < 200 || particle.alpha <= 0) {
+                    particle.x = 450 + Math.random() * 60;
+                    particle.y = 280 + Math.random() * 40;
+                    particle.alpha = Math.random() * 0.7 + 0.3;
+                    particle.rotation = Math.random() * Math.PI * 2;
+                }
+            });
+        }
+        
+        function drawHeartParticles() {
+            heartParticles.forEach(particle => {
+                ctx.save();
+                ctx.globalAlpha = particle.alpha;
+                ctx.fillStyle = '#FF1493';
+                ctx.translate(particle.x, particle.y);
+                ctx.rotate(particle.rotation);
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(-particle.size/2, -particle.size/2, -particle.size, 0, 0, particle.size);
+                ctx.bezierCurveTo(particle.size, 0, particle.size/2, -particle.size/2, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            });
+        }
+        
+        function animate() {
+            // Bersihkan canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Gambar latar belakang
+            drawKitchen();
+            drawPot();
+            drawVegetables();
+            drawFire();
+            
+            // Animasi ibu tersenyum
+            motherSmile += 0.05;
+            
+            // Animasi anak berlari
+            if (childPosition < 300 && !childRunning) {
+                childPosition += 2;
+                if (childPosition > 200) {
+                    childRunning = true;
+                }
+            }
+            
+            // Animasi gestur menyapa
+            welcomeGesture += 0.08;
+            
+            // Gambar elemen-elemen
+            drawMother();
+            drawChild();
+            
+            // Update dan gambar partikel hati
+            updateHeartParticles();
+            drawHeartParticles();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Mulai animasi
+        animate();
+    </script>
+</body>
+</html>
