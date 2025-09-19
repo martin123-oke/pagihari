@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setiap Pagi, Keluarga Makan Pagi Bersama</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5dc;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        canvas {
+            border: 2px solid #8B4513;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #8B4513;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Setiap Pagi, Keluarga Makan Pagu Bersama</h1>
+        <canvas id="animationCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('animationCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Variabel animasi
+        let familyMembers = [];
+        let foodOnTable = [];
+        let breakfastTime = 0;
+        let conversationBubble = "";
+        
+        function drawDiningRoom() {
+            // Lantai
+            ctx.fillStyle = '#E8D0AA';
+            ctx.fillRect(0, 350, canvas.width, 150);
+            
+            // Dinding
+            ctx.fillStyle = '#FFFACD';
+            ctx.fillRect(0, 0, canvas.width, 350);
+            
+            // Meja makan
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(200, 250, 400, 40);
+            
+            // Kursi keluarga
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(150, 290, 80, 80);
+            ctx.fillRect(270, 290, 80, 80);
+            ctx.fillRect(390, 290, 80, 80);
+            ctx.fillRect(510, 290, 80, 80);
+            
+            // Rak buku
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(50, 50, 150, 20);
+            ctx.fillRect(50, 80, 150, 20);
+            ctx.fillRect(50, 110, 150, 20);
+            
+            // Lampu gantung
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(400, 30, 15, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#CCCCCC';
+            ctx.fillRect(395, 45, 10, 80);
+            
+            // Jendela
+            ctx.fillStyle = '#ADD8E6';
+            ctx.fillRect(600, 50, 180, 120);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(610, 60, 160, 100);
+        }
+        
+        function drawMother() {
+            const motherX = 190;
+            const motherY = 330;
+            
+            // Badan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(motherX - 20, motherY - 40, 40, 60);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(motherX, motherY - 50, 25, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut panjang
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(motherX, motherY - 53, 28, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.ellipse(motherX - 8, motherY - 52, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(motherX + 8, motherY - 52, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Senyum
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.ellipse(motherX, motherY - 42, 8, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tangan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.ellipse(motherX - 30, motherY - 30, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(motherX + 30, motherY - 30, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Baju
+            ctx.fillStyle = '#9370DB';
+            ctx.fillRect(motherX - 20, motherY - 20, 40, 40);
+        }
+        
+        function drawFather() {
+            const fatherX = 310;
+            const fatherY = 330;
+            
+            // Badan
+            ctx.fillStyle = '#4682B4';
+            ctx.fillRect(fatherX - 25, fatherY - 40, 50, 60);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(fatherX, fatherY - 50, 25, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(fatherX, fatherY - 53, 27, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.ellipse(fatherX - 10, fatherY - 52, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(fatherX + 10, fatherY - 52, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Senyum
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.ellipse(fatherX, fatherY - 42, 8, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tangan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.ellipse(fatherX - 35, fatherY - 30, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(fatherX + 35, fatherY - 30, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Baju
+            ctx.fillStyle = '#4682B4';
+            ctx.fillRect(fatherX - 25, fatherY - 20, 50, 40);
+        }
+        
+        function drawSister() {
+            const sisterX = 430;
+            const sisterY = 330;
+            
+            // Badan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(sisterX - 20, sisterY - 40, 40, 60);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(sisterX, sisterY - 50, 25, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut panjang
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(sisterX, sisterY - 53, 28, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.ellipse(sisterX - 8, sisterY - 52, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(sisterX + 8, sisterY - 52, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Senyum
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.ellipse(sisterX, sisterY - 42, 8, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tangan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.ellipse(sisterX - 25, sisterY - 30, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(sisterX + 25, sisterY - 30, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Baju
+            ctx.fillStyle = '#9370DB';
+            ctx.fillRect(sisterX - 20, sisterY - 20, 40, 40);
+        }
+        
+        function drawBrother() {
+            const brotherX = 550;
+            const brotherY = 330;
+            
+            // Badan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(brotherX - 15, brotherY - 30, 30, 50);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(brotherX, brotherY - 45, 20, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut pendek
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(brotherX, brotherY - 48, 22, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.ellipse(brotherX - 7, brotherY - 47, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(brotherX + 7, brotherY - 47, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Senyum
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.ellipse(brotherX, brotherY - 35, 8, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tangan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.ellipse(brotherX - 20, brotherY - 25, 8, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(brotherX + 20, brotherY - 25, 8, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Kaki
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(brotherX - 12, brotherY + 20, 8, 15);
+            ctx.fillRect(brotherX + 4, brotherY + 20, 8, 15);
+        }
+        
+        function drawFoodOnTable() {
+            // Nasi
+            ctx.fillStyle = '#FFD700';
+            ctx.fillRect(350, 270, 100, 20);
+            
+            // Telur
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.ellipse(370, 250, 15, 20, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(430, 250, 15, 20, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Buah
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.arc(480, 260, 10, 10, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Sayuran
+            ctx.fillStyle = '#228B22';
+            ctx.fillRect(320, 260, 20, 30);
+            ctx.fillRect(480, 260, 20, 30);
+        }
+        
+        function drawConversation() {
+            if (familyMembers.length === 4) {
+                // Balon percakapan
+                ctx.fillStyle = '#FFFFFF';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 1;
+                
+                ctx.beginPath();
+                ctx.roundRect(350, 120, 100, 40, 10);
+                ctx.fill();
+                ctx.stroke();
+                
+                // Panah balon
+                ctx.beginPath();
+                ctx.moveTo(350, 135);
+                ctx.lineTo(340, 130);
+                ctx.lineTo(350, 125);
+                ctx.fill();
+                
+                // Teks percakapan
+                ctx.fillStyle = '#000000';
+                ctx.font = '12px Arial';
+                ctx.fillText("Selamat pagi!", 360, 138);
+            }
+        }
+        
+        function animate() {
+            // Bersihkan canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Gambar latar belakang
+            drawDiningRoom();
+            drawMother();
+            drawFather();
+            drawSister();
+            drawBrother();
+            drawFoodOnTable();
+            
+            // Animasi percakapan
+            if (familyMembers.length === 4) {
+                drawConversation();
+            }
+            
+            // Animasi keluarga duduk
+            if (breakfastTime < 100) {
+                breakfastTime++;
+                if (breakfastTime > 80) {
+                    familyMembers.push(true);
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Mulai animasi
+        animate();
+    </script>
+</body>
+</html>
