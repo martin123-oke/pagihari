@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagi Hari Cuaca Cerah</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #87CEEB;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        canvas {
+            border: 2px solid #333;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #FF6B35;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pagi Hari Cuaca Cerah</h1>
+        <canvas id="animationCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('animationCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Variabel animasi
+        let sunY = 50;
+        let birdX = -50;
+        let birdY = 150;
+        let cloudX = 0;
+        let treeLeaves = [];
+        
+        // Inisialisasi daun pohon
+        for (let i = 0; i < 30; i++) {
+            treeLeaves.push({
+                x: Math.random() * 200 + 300,
+                y: Math.random() * 80 + 380,
+                size: Math.random() * 5 + 3,
+                angle: Math.random() * Math.PI * 2
+            });
+        }
+
+        function drawSun() {
+            // Matahari
+            ctx.beginPath();
+            ctx.arc(650, sunY, 40, 0, Math.PI * 2);
+            ctx.fillStyle = '#FFD700';
+            ctx.fill();
+            
+            // Sinar matahari
+            ctx.strokeStyle = '#FFD700';
+            ctx.lineWidth = 3;
+            for (let i = 0; i < 12; i++) {
+                const angle = (i / 12) * Math.PI * 2;
+                const startX = 650 + Math.cos(angle) * 45;
+                const startY = sunY + Math.sin(angle) * 45;
+                const endX = 650 + Math.cos(angle) * 60;
+                const endY = sunY + Math.sin(angle) * 60;
+                
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+            }
+        }
+
+        function drawMountains() {
+            // Gunung pertama
+            ctx.beginPath();
+            ctx.moveTo(0, 400);
+            ctx.lineTo(200, 250);
+            ctx.lineTo(400, 350);
+            ctx.lineTo(600, 200);
+            ctx.lineTo(800, 400);
+            ctx.closePath();
+            ctx.fillStyle = '#8B7355';
+            ctx.fill();
+            
+            // Gunung kedua (belakang)
+            ctx.beginPath();
+            ctx.moveTo(0, 420);
+            ctx.lineTo(150, 300);
+            ctx.lineTo(350, 380);
+            ctx.lineTo(550, 280);
+            ctx.lineTo(800, 420);
+            ctx.closePath();
+            ctx.fillStyle = '#A0522D';
+            ctx.fill();
+        }
+
+        function drawClouds() {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            
+            // Awan pertama
+            ctx.beginPath();
+            ctx.arc(cloudX, 100, 25, 0, Math.PI * 2);
+            ctx.arc(cloudX + 25, 95, 30, 0, Math.PI * 2);
+            ctx.arc(cloudX + 50, 100, 25, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Awan kedua
+            ctx.beginPath();
+            ctx.arc(cloudX + 200, 130, 20, 0, Math.PI * 2);
+            ctx.arc(cloudX + 220, 125, 25, 0, Math.PI * 2);
+            ctx.arc(cloudX + 240, 130, 20, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawBird(x, y) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Sayap kiri
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.quadraticCurveTo(-15, -10, -10, -20);
+            ctx.quadraticCurveTo(-5, -10, 0, 0);
+            ctx.fillStyle = '#000';
+            ctx.fill();
+            
+            // Tubuh
+            ctx.beginPath();
+            ctx.ellipse(5, 0, 8, 4, 0, 0, Math.PI * 2);
+            ctx.fillStyle = '#333';
+            ctx.fill();
+            
+            // Sayap kanan
+            ctx.beginPath();
+            ctx.moveTo(10, 0);
+            ctx.quadraticCurveTo(25, -10, 20, -20);
+            ctx.quadraticCurveTo(15, -10, 10, 0);
+            ctx.fillStyle = '#000';
+            ctx.fill();
+            
+            ctx.restore();
+        }
+
+        function drawTree() {
+            // Batang pohon
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(320, 350, 20, 80);
+            
+            // Daun-daun
+            ctx.fillStyle = '#228B22';
+            treeLeaves.forEach(leaf => {
+                ctx.save();
+                ctx.translate(leaf.x, leaf.y);
+                ctx.rotate(leaf.angle);
+                ctx.beginPath();
+                ctx.ellipse(0, 0, leaf.size, leaf.size * 1.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+        }
+
+        function animate() {
+            // Bersihkan canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Gambar latar belakang
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#87CEEB'); // Langit biru muda
+            gradient.addColorStop(1, '#98FB98'); // Hijau muda di bawah
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Gambar elemen-elemen
+            drawMountains();
+            drawClouds();
+            drawSun();
+            drawTree();
+            
+            // Gambar burung
+            drawBird(birdX, birdY);
+            drawBird(birdX + 100, birdY - 20);
+            drawBird(birdX + 200, birdY + 10);
+            
+            // Update posisi animasi
+            if (sunY < 150) {
+                sunY += 0.5;
+            }
+            
+            birdX += 1;
+            if (birdX > canvas.width + 50) {
+                birdX = -50;
+            }
+            
+            cloudX += 0.2;
+            if (cloudX > canvas.width + 100) {
+                cloudX = -100;
+            }
+            
+            // Animate daun
+            treeLeaves.forEach(leaf => {
+                leaf.angle += 0.01;
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Mulai animasi
+        animate();
+    </script>
+</body>
+</html>
