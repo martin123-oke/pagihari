@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aku Senang Hari Ini</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5dc;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        canvas {
+            border: 2px solid #8B4513;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #8B4513;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Aku Senang Hari Ini</h1>
+        <canvas id="animationCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('animationCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Variabel animasi
+        let childPlaying = false;
+        let playActivities = [];
+        let happinessLevel = 0;
+        let thoughtBubble = "";
+        
+        function drawBackyard() {
+            // Lantai
+            ctx.fillStyle = '#E8D0AA';
+            ctx.fillRect(0, 350, canvas.width, 150);
+            
+            // Dinding rumah
+            ctx.fillStyle = '#FFFACD';
+            ctx.fillRect(0, 0, canvas.width, 350);
+            
+            // Pintu belakang
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(50, 250, 80, 100);
+            
+            // Jendela belakang
+            ctx.fillStyle = '#ADD8E6';
+            ctx.fillRect(60, 260, 60, 80);
+            
+            // Taman
+            ctx.fillStyle = '#228B22';
+            ctx.fillRect(0, 300, canvas.width, 50);
+            
+            // Pohon
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(150, 250, 20, 100);
+            ctx.fillStyle = '#228B22';
+            ctx.beginPath();
+            ctx.arc(160, 240, 40, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(350, 250, 20, 100);
+            ctx.fillStyle = '#228B22';
+            ctx.beginPath();
+            ctx.arc(360, 240, 40, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(550, 250, 20, 100);
+            ctx.fillStyle = '#228B22';
+            ctx.beginPath();
+            ctx.arc(560, 240, 40, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Langit
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, canvas.width, 300);
+            
+            // Awan
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.arc(200, 80, 30, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(400, 60, 40, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(600, 90, 35, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        function drawChild() {
+            const childX = 400;
+            const childY = 320;
+            
+            // Badan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(childX - 15, childY - 30, 30, 50);
+            
+            // Kepala
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.arc(childX, childY - 45, 20, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Rambut
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(childX, childY - 48, 22, Math.PI, 0);
+            ctx.fill();
+            
+            // Mata
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.ellipse(childX - 7, childY - 47, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(childX + 7, childY - 47, 4, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Senyum
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.ellipse(childX, childY - 35, 8, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tangan
+            ctx.fillStyle = '#FFE4B5';
+            ctx.beginPath();
+            ctx.ellipse(childX - 20, childY - 25, 8, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(childX + 20, childY - 25, 8, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Kaki
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(childX - 12, childY + 20, 8, 15);
+            ctx.fillRect(childX + 4, childY + 20, 8, 15);
+        }
+        
+        function drawPlayActivities() {
+            // Kite
+            ctx.fillStyle = '#FF0000';
+            ctx.beginPath();
+            ctx.moveTo(300, 150);
+            ctx.lineTo(350, 100);
+            ctx.lineTo(400, 150);
+            ctx.lineTo(350, 130);
+            ctx.closePath();
+            ctx.fill();
+            
+            // String
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(350, 130);
+            ctx.lineTo(350, 200);
+            ctx.stroke();
+            
+            // Ball
+            ctx.fillStyle = '#FF69B4';
+            ctx.beginPath();
+            ctx.arc(500, 200, 15, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Swing
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(450, 180, 8, 40);
+            ctx.fillStyle = '#FFE4B5';
+            ctx.fillRect(445, 175, 18, 8);
+        }
+        
+        function drawThoughtBubble() {
+            if (happinessLevel > 0.5) {
+                // Balon pikiran
+                ctx.fillStyle = '#FFFFFF';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 1;
+                
+                ctx.beginPath();
+                ctx.roundRect(320, 100, 120, 60, 10);
+                ctx.fill();
+                ctx.stroke();
+                
+                // Panah balon
+                ctx.beginPath();
+                ctx.moveTo(320, 115);
+                ctx.lineTo(310, 110);
+                ctx.lineTo(320, 105);
+                ctx.fill();
+                
+                // Teks pikiran
+                ctx.fillStyle = '#000000';
+                ctx.font = '14px Arial';
+                ctx.fillText("Senang sekali!", 335, 135);
+            }
+        }
+        
+        function animate() {
+            // Bersihkan canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Gambar latar belakang
+            drawBackyard();
+            drawPlayActivities();
+            drawChild();
+            
+            // Animasi bermain
+            if (happinessLevel < 1) {
+                happinessLevel += 0.01;
+                if (happinessLevel > 0.7) {
+                    childPlaying = true;
+                }
+            }
+            
+            // Animasi pikiran
+            if (happinessLevel > 0.8) {
+                drawThoughtBubble();
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Mulai animasi
+        animate();
+    </script>
+</body>
+</html>
