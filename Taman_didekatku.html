@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taman di Dekat Rumahku - Permainan Membaca</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 950px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #11998e;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #38ef7d;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 140px;
+            padding: 15px 10px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .story-text {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 15px;
+            line-height: 2;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            border: 3px solid #11998e;
+        }
+
+        .story-text p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .recording {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .game-container {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 15px;
+            border: 3px solid #11998e;
+            margin-bottom: 20px;
+        }
+
+        .word-display {
+            text-align: center;
+            font-size: 3em;
+            font-weight: bold;
+            color: #11998e;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .word-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .word-option {
+            padding: 20px;
+            background: white;
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.3em;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .word-option:hover {
+            border-color: #11998e;
+            transform: translateY(-3px);
+        }
+
+        .word-option.correct {
+            background: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+
+        .word-option.wrong {
+            background: #f44336;
+            color: white;
+            border-color: #f44336;
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #11998e;
+            margin: 20px 0;
+        }
+
+        .canvas-container {
+            background: white;
+            border: 3px solid #11998e;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        #drawingCanvas {
+            display: block;
+            cursor: crosshair;
+            width: 100%;
+            touch-action: none;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .color-btn {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #ddd;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .color-btn:hover, .color-btn.active {
+            transform: scale(1.2);
+            border-color: #333;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .recording-panel {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 15px;
+            border: 3px solid #11998e;
+            text-align: center;
+        }
+
+        .recording-status {
+            font-size: 1.3em;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .recordings-list {
+            margin-top: 20px;
+        }
+
+        .recording-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid #ddd;
+        }
+
+        .feedback {
+            text-align: center;
+            font-size: 1.3em;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .feedback.success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .mic-visualizer {
+            width: 100px;
+            height: 100px;
+            margin: 20px auto;
+            border-radius: 50%;
+            background: #f44336;
+            animation: micPulse 1.5s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+        }
+
+        @keyframes micPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7); }
+            50% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(244, 67, 54, 0); }
+        }
+
+        .tool-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tool-btn {
+            padding: 10px 20px;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .tool-btn.active {
+            background: #11998e;
+            color: white;
+            border-color: #11998e;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            .subtitle { font-size: 1em; }
+            .word-display { font-size: 2em; padding: 20px; }
+            .btn { padding: 10px 20px; font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌳 Taman di Dekat Rumahku</h1>
+        <p class="subtitle">Permainan Membaca Interaktif dengan Suara & Gambar</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('game')">🎮 Game Membaca</button>
+            <button class="tab" onclick="showTab('recording')">🎤 Rekam Suara</button>
+            <button class="tab" onclick="showTab('drawing')">✏️ Menggambar</button>
+            <button class="tab" onclick="showTab('story')">📖 Baca Cerita</button>
+        </div>
+
+        <div id="game" class="content active">
+            <div class="score" id="gameScore">Skor: 0 / 10</div>
+            
+            <div class="game-container">
+                <div class="word-display" id="wordDisplay">Klik "Mulai Game" untuk bermain!</div>
+                <div id="gameInstruction" style="text-align: center; font-size: 1.2em; color: #666; margin: 20px 0;">
+                    Dengarkan kata yang dibacakan, lalu pilih kata yang benar!
+                </div>
+                <div class="word-options" id="wordOptions"></div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" onclick="startGame()" id="startGameBtn">
+                    🎮 Mulai Game
+                </button>
+                <button class="btn btn-secondary" onclick="repeatWord()" id="repeatBtn" style="display: none;">
+                    🔊 Ulangi Kata
+                </button>
+            </div>
+
+            <div id="gameFeedback" class="feedback" style="display: none;"></div>
+        </div>
+
+        <div id="recording" class="content">
+            <div class="recording-panel">
+                <h2 style="color: #11998e; margin-bottom: 20px;">🎤 Rekam Bacaan Kamu</h2>
+                
+                <div class="story-text" style="max-height: 200px; overflow-y: auto; margin-bottom: 20px;">
+                    <p><strong>Bacalah teks ini dengan suara lantang:</strong></p>
+                    <p>Pagi ini, aku keluar dari rumah sambil membawa topi kesayanganku. Di depan rumahku ada jalan kecil. Aku berjalan melewati jalan itu menuju taman.</p>
+                </div>
+
+                <div id="recordingStatus" class="recording-status">
+                    Tekan tombol mikrofon untuk mulai merekam
+                </div>
+
+                <div id="micVisualizer" style="display: none;">
+                    <div class="mic-visualizer">🎤</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="startRecording()" id="recordBtn">
+                        🎤 Mulai Rekam
+                    </button>
+                    <button class="btn btn-danger" onclick="stopRecording()" id="stopRecordBtn" style="display: none;">
+                        ⏹️ Berhenti
+                    </button>
+                </div>
+
+                <audio id="audioPlayer" class="audio-player" controls style="display: none;"></audio>
+
+                <div class="recordings-list" id="recordingsList"></div>
+            </div>
+        </div>
+
+        <div id="drawing" class="content">
+            <h2 style="text-align: center; color: #11998e; margin-bottom: 20px;">✏️ Gambar Taman Impianmu</h2>
+            
+            <div class="tool-selector">
+                <button class="tool-btn active" onclick="selectTool('pen')" id="penTool">
+                    ✏️ Pensil
+                </button>
+                <button class="tool-btn" onclick="selectTool('eraser')" id="eraserTool">
+                    🧹 Penghapus
+                </button>
+            </div>
+
+            <div class="color-palette">
+                <div class="color-btn active" style="background: #000000;" onclick="selectColor('#000000')"></div>
+                <div class="color-btn" style="background: #ff0000;" onclick="selectColor('#ff0000')"></div>
+                <div class="color-btn" style="background: #00ff00;" onclick="selectColor('#00ff00')"></div>
+                <div class="color-btn" style="background: #0000ff;" onclick="selectColor('#0000ff')"></div>
+                <div class="color-btn" style="background: #ffff00;" onclick="selectColor('#ffff00')"></div>
+                <div class="color-btn" style="background: #ff00ff;" onclick="selectColor('#ff00ff')"></div>
+                <div class="color-btn" style="background: #00ffff;" onclick="selectColor('#00ffff')"></div>
+                <div class="color-btn" style="background: #ffa500;" onclick="selectColor('#ffa500')"></div>
+                <div class="color-btn" style="background: #8b4513;" onclick="selectColor('#8b4513')"></div>
+                <div class="color-btn" style="background: #808080;" onclick="selectColor('#808080')"></div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="drawingCanvas" width="800" height="500"></canvas>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-secondary" onclick="clearCanvas()">
+                    🗑️ Hapus Semua
+                </button>
+                <button class="btn btn-primary" onclick="saveDrawing()">
+                    💾 Simpan Gambar
+                </button>
+            </div>
+        </div>
+
+        <div id="story" class="content">
+            <div class="story-text" id="storyText">
+                <p><strong>Pagi ini, aku keluar dari rumah sambil membawa topi kesayanganku.</strong></p>
+                <p>Di depan rumahku ada jalan kecil. Aku berjalan melewati jalan itu menuju taman.</p>
+                
+                <p>Di dekat jalan, ada pasar yang ramai. Banyak orang berbelanja sayur dan buah. Ada juga warung kecil milik Bu Sari. Aku menyapa Bu Sari sebelum lanjut berjalan. Tidak lama kemudian, aku sampai di taman.</p>
+                
+                <p>Taman itu hijau, dengan pohon besar yang rindang. Ada bunga merah, kuning, dan ungu. Taman ini indah sekali.</p>
+                
+                <p>Saat pulang, aku melewati jalan raya. Aku menyeberang bersama orang tuaku, dengan hati-hati. Aku senang bisa bermain di taman dekat rumahku. Taman membuat lingkungan menjadi indah.</p>
+                
+                <p><strong>Di dekat rumahmu, ada apa saja?</strong></p>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" onclick="readStory()" id="readBtn">
+                    🔊 Bacakan Cerita
+                </button>
+                <button class="btn btn-secondary" onclick="stopReading()" id="stopBtn">
+                    ⏸️ Berhenti
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const storyWords = [
+            'rumah', 'taman', 'jalan', 'topi', 'pasar', 
+            'bunga', 'pohon', 'indah', 'hijau', 'rindang',
+            'merah', 'kuning', 'ungu', 'senang', 'bermain'
+        ];
+
+        let currentWord = '';
+        let gameScore = 0;
+        let wordsPlayed = 0;
+        const maxWords = 10;
+        let speechSynth = window.speechSynthesis;
+        
+        let mediaRecorder;
+        let audioChunks = [];
+        let recordings = [];
+        
+        let canvas, ctx;
+        let isDrawing = false;
+        let currentColor = '#000000';
+        let currentTool = 'pen';
+        let lineWidth = 5;
+
+        function initCanvas() {
+            canvas = document.getElementById('drawingCanvas');
+            ctx = canvas.getContext('2d');
+            
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const pos = getPosition(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            const pos = getPosition(e);
+            
+            if (currentTool === 'eraser') {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.lineWidth = 20;
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = currentColor;
+                ctx.lineWidth = lineWidth;
+            }
+            
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 
+                                             e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }
+
+        function getPosition(e) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: (e.clientX - rect.left) * (canvas.width / rect.width),
+                y: (e.clientY - rect.top) * (canvas.height / rect.height)
+            };
+        }
+
+        function selectColor(color) {
+            currentColor = color;
+            currentTool = 'pen';
+            
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.getElementById('penTool').classList.add('active');
+            document.getElementById('eraserTool').classList.remove('active');
+        }
+
+        function selectTool(tool) {
+            currentTool = tool;
+            
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function saveDrawing() {
+            const dataURL = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = 'gambar-taman-ku.png';
+            link.href = dataURL;
+            link.click();
+            
+            speak('Gambar kamu sudah disimpan!');
+        }
+
+        function showTab(tabName) {
+            const contents = document.querySelectorAll('.content');
+            const tabs = document.querySelectorAll('.tab');
+            
+            contents.forEach(content => content.classList.remove('active'));
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            stopReading();
+            
+            if (tabName === 'drawing' && !canvas) {
+                setTimeout(initCanvas, 100);
+            }
+        }
+
+        function startGame() {
+            gameScore = 0;
+            wordsPlayed = 0;
+            updateGameScore();
+            nextWord();
+            
+            document.getElementById('startGameBtn').style.display = 'none';
+            document.getElementById('repeatBtn').style.display = 'inline-flex';
+        }
+
+        function nextWord() {
+            if (wordsPlayed >= maxWords) {
+                endGame();
+                return;
+            }
+
+            currentWord = storyWords[Math.floor(Math.random() * storyWords.length)];
+            
+            document.getElementById('wordDisplay').textContent = '🔊 Dengarkan...';
+            document.getElementById('gameFeedback').style.display = 'none';
+            
+            const wrongWords = storyWords.filter(w => w !== currentWord);
+            const options = [currentWord];
+            
+            for (let i = 0; i < 3; i++) {
+                const randomWord = wrongWords[Math.floor(Math.random() * wrongWords.length)];
+                if (!options.includes(randomWord)) {
+                    options.push(randomWord);
+                }
+            }
+            
+            options.sort(() => Math.random() - 0.5);
+            
+            const optionsContainer = document.getElementById('wordOptions');
+            optionsContainer.innerHTML = '';
+            
+            setTimeout(() => {
+                speak(currentWord);
+                document.getElementById('wordDisplay').textContent = '❓';
+                
+                options.forEach(word => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'word-option';
+                    optionDiv.textContent = word;
+                    optionDiv.onclick = () => checkAnswer(word, optionDiv);
+                    optionsContainer.appendChild(optionDiv);
+                });
+            }, 500);
+        }
+
+        function checkAnswer(selected, element) {
+            wordsPlayed++;
+            
+            const allOptions = document.querySelectorAll('.word-option');
+            allOptions.forEach(opt => opt.style.pointerEvents = 'none');
+            
+            const feedback = document.getElementById('gameFeedback');
+            
+            if (selected === currentWord) {
+                gameScore++;
+                element.classList.add('correct');
+                feedback.textContent = '🎉 Benar! Hebat!';
+                feedback.className = 'feedback success';
+                speak('Benar! Hebat!');
+            } else {
+                element.classList.add('wrong');
+                allOptions.forEach(opt => {
+                    if (opt.textContent === currentWord) {
+                        opt.classList.add('correct');
+                    }
+                });
+                feedback.textContent = '❌ Coba lagi ya! Kata yang benar: ' + currentWord;
+                feedback.className = 'feedback';
+                feedback.style.background = '#ff9800';
+                feedback.style.color = 'white';
+                speak('Coba lagi ya!');
+            }
+            
+            feedback.style.display = 'block';
+            updateGameScore();
+            
+            setTimeout(() => {
+                nextWord();
+            }, 2000);
+        }
+
+        function repeatWord() {
+            speak(currentWord);
+        }
+
+        function updateGameScore() {
+            document.getElementById('gameScore').textContent = `Skor: ${gameScore} / ${maxWords}`;
+        }
+
+        function endGame() {
+            const percentage = (gameScore / maxWords) * 100;
+            let message = '';
+            
+            if (percentage === 100) {
+                message = '🏆 Sempurna! Kamu hebat sekali!';
+            } else if (percentage >= 70) {
+                message = '⭐ Bagus sekali! Terus belajar ya!';
+            } else {
+                message = '💪 Tetap semangat! Coba lagi ya!';
+            }
+            
+            document.getElementById('wordDisplay').textContent = message;
+            document.getElementById('wordOptions').innerHTML = '';
+            document.getElementById('repeatBtn').style.display = 'none';
+            document.getElementById('startGameBtn').style.display = 'inline-flex';
+            
+            speak(message);
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    
+                    const audioPlayer = document.getElementById('audioPlayer');
+                    audioPlayer.src = audioUrl;
+                    audioPlayer.style.display = 'block';
+                    
+                    recordings.push({
+                        url: audioUrl,
+                        date: new Date().toLocaleString('id-ID')
+                    });
+                    
+                    updateRecordingsList();
+                    
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                
+                mediaRecorder.start();
+                
+                document.getElementById('recordBtn').style.display = 'none';
+                document.getElementById('stopRecordBtn').style.display = 'inline-flex';
+                document.getElementById('recordingStatus').textContent = '🎙️ Sedang merekam... Bacalah teks dengan lantang!';
+                document.getElementById('micVisualizer').style.display = 'block';
+                
+            } catch (error) {
+                alert('Tidak dapat mengakses mikrofon. Pastikan izin mikrofon diaktifkan.');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                
+                document.getElementById('recordBtn').style.display = 'inline-flex';
+                document.getElementById('stopRecordBtn').style.display = 'none';
+                document.getElementById('recordingStatus').textContent = '✅ Rekaman selesai! Dengarkan hasilnya di bawah.';
+                document.getElementById('micVisualizer').style.display = 'none';
+            }
+        }
+
+        function updateRecordingsList() {
+            const listContainer = document.getElementById('recordingsList');
+            listContainer.innerHTML = '<h3 style="color: #11998e; margin-bottom: 15px;">📼 Rekaman Saya:</h3>';
+            
+            recordings.forEach((recording, index) => {
+                const item = document.createElement('div');
+                item.className = 'recording-item';
+                item.innerHTML = `
+                    <div>
+                        <strong>Rekaman ${index + 1}</strong><br>
+                        <small>${recording.date}</small>
+                    </div>
+                    <audio controls src="${recording.url}" style="max-width: 200px;"></audio>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function readStory() {
+            stopReading();
+            
+            const text = document.getElementById('storyText').innerText;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            utterance.rate = 0.8;
+            utterance.pitch = 1.1;
+            
+            const readBtn = document.getElementById('readBtn');
+            readBtn.classList.add('recording');
+            
+            utterance.onend = function() {
+                readBtn.classList.remove('recording');
+            };
+            
+            speechSynth.speak(utterance);
+        }
+
+        function stopReading() {
+            if (speechSynth.speaking) {
+                speechSynth.cancel();
+                document.getElementById('readBtn')?.classList.remove('recording');
+            }
+        }
+
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            utterance.rate = 0.9;
+            utterance.pitch = 1.2;
+            speechSynth.speak(utterance);
+        }
+
+        window.onload = function() {
+            console.log('Permainan Fry Word siap dimainkan!');
+        };
+    </script>
+</body>
+</html>
