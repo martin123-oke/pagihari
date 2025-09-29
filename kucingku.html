@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kucingku Si Putih - Belajar Membaca</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 950px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #ee5a6f;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .cat-mascot {
+            text-align: center;
+            font-size: 6em;
+            margin: 20px 0;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 10px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+        }
+
+        .content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .listening-section {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 4px solid #ff6b6b;
+        }
+
+        .story-display {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            font-size: 1.5em;
+            line-height: 2.2;
+            margin-bottom: 20px;
+            border: 3px solid #ff6b6b;
+            text-align: center;
+        }
+
+        .word-highlight {
+            background: #fffacd;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #ff6b6b;
+            display: inline-block;
+            animation: highlight 1s ease-in-out infinite;
+        }
+
+        @keyframes highlight {
+            0%, 100% { background: #fffacd; }
+            50% { background: #ffeb3b; }
+        }
+
+        .sound-wave {
+            text-align: center;
+            font-size: 3em;
+            margin: 20px 0;
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .pronunciation-section {
+            background: #fff3e0;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 4px solid #ff9800;
+        }
+
+        .word-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 4px solid #ff6b6b;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .word-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .word-text {
+            font-size: 3em;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+        }
+
+        .word-syllables {
+            font-size: 2em;
+            color: #666;
+            margin-bottom: 15px;
+            letter-spacing: 5px;
+        }
+
+        .record-indicator {
+            width: 100px;
+            height: 100px;
+            margin: 20px auto;
+            border-radius: 50%;
+            background: #f44336;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            animation: recordPulse 1.5s infinite;
+        }
+
+        @keyframes recordPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7); }
+            50% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(244, 67, 54, 0); }
+        }
+
+        .letter-recognition {
+            background: #e3f2fd;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 4px solid #2196f3;
+        }
+
+        .letter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .letter-box {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            border: 3px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .letter-box:hover {
+            transform: translateY(-5px);
+            border-color: #2196f3;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .letter-box.correct {
+            background: #4caf50;
+            color: white;
+            border-color: #4caf50;
+            animation: correctPop 0.5s;
+        }
+
+        .letter-box.wrong {
+            background: #f44336;
+            color: white;
+            border-color: #f44336;
+            animation: shake 0.5s;
+        }
+
+        @keyframes correctPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .sentence-builder {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 3px solid #9c27b0;
+            min-height: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .word-chip {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .word-chip:hover {
+            transform: scale(1.1);
+        }
+
+        .word-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #2196f3 0%, #21cbf3 100%);
+            color: white;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin: 20px 0;
+            padding: 20px;
+            background: #fff3e0;
+            border-radius: 15px;
+        }
+
+        .feedback-message {
+            text-align: center;
+            font-size: 1.5em;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback-message.show {
+            display: block;
+            animation: slideDown 0.5s;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .feedback-message.success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .feedback-message.encourage {
+            background: #ff9800;
+            color: white;
+        }
+
+        .progress-container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .progress-bar-outer {
+            background: #e0e0e0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ee5a6f);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .microphone-status {
+            text-align: center;
+            font-size: 1.2em;
+            color: #666;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2em; }
+            .subtitle { font-size: 1em; }
+            .word-text { font-size: 2em; }
+            .btn { padding: 12px 25px; font-size: 1em; }
+            .letter-box { font-size: 2em; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐱 Kucingku Si Putih</h1>
+        <p class="subtitle">Belajar Mendengar, Meniru, dan Mengenal Huruf</p>
+        
+        <div class="cat-mascot">🐱</div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('listening')">👂 Mendengar</button>
+            <button class="tab" onclick="showTab('pronunciation')">🗣️ Meniru</button>
+            <button class="tab" onclick="showTab('recognition')">🔤 Mengenal</button>
+        </div>
+
+        <!-- Tab Mendengarkan -->
+        <div id="listening" class="content active">
+            <div class="listening-section">
+                <h2 style="color: #ff6b6b; text-align: center; margin-bottom: 20px;">
+                    👂 Dengarkan dengan Baik
+                </h2>
+                
+                <div class="story-display" id="storyDisplay">
+                    <p>Klik tombol di bawah untuk mendengarkan cerita!</p>
+                </div>
+
+                <div id="soundWave" class="sound-wave" style="display: none;">
+                    🔊 📻 🎵
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="playFullStory()">
+                        🔊 Dengar Cerita Lengkap
+                    </button>
+                    <button class="btn btn-info" onclick="playByParagraph()">
+                        📖 Dengar Per Paragraf
+                    </button>
+                    <button class="btn btn-success" onclick="playSlowly()">
+                        🐢 Dengar Pelan-Pelan
+                    </button>
+                </div>
+
+                <div class="progress-container">
+                    <h3 style="color: #ff6b6b; margin-bottom: 10px;">Kemajuan Mendengar:</h3>
+                    <div class="progress-bar-outer">
+                        <div class="progress-bar-inner" id="listeningProgress">0%</div>
+                    </div>
+                    <p style="text-align: center; color: #666;">
+                        <span id="timesListened">0</span> kali mendengarkan
+                    </p>
+                </div>
+            </div>
+
+            <div class="feedback-message" id="listeningFeedback"></div>
+        </div>
+
+        <!-- Tab Menirukan Pengucapan -->
+        <div id="pronunciation" class="content">
+            <div class="pronunciation-section">
+                <h2 style="color: #ff9800; text-align: center; margin-bottom: 20px;">
+                    🗣️ Tirukan Pengucapan Kata
+                </h2>
+
+                <div class="score-display">
+                    Kata Berhasil Ditiru: <span id="wordScore">0</span> / 10
+                </div>
+
+                <div class="word-card" id="currentWordCard" onclick="speakCurrentWord()">
+                    <div class="word-text" id="currentWord">Si Putih</div>
+                    <div class="word-syllables" id="wordSyllables">Si - Pu - tih</div>
+                    <p style="color: #666; font-size: 1.1em;">👆 Klik untuk mendengar</p>
+                </div>
+
+                <div class="microphone-status" id="micStatus">
+                    Klik tombol rekam untuk meniru kata
+                </div>
+
+                <div id="recordingIndicator" style="display: none;">
+                    <div class="record-indicator">🎤</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="startRecording()" id="recordBtn">
+                        🎤 Rekam Suaraku
+                    </button>
+                    <button class="btn btn-success" onclick="stopRecording()" id="stopRecordBtn" style="display: none;">
+                        ⏹️ Berhenti Rekam
+                    </button>
+                    <button class="btn btn-info" onclick="nextWord()">
+                        ➡️ Kata Berikutnya
+                    </button>
+                </div>
+
+                <audio id="playbackAudio" controls style="width: 100%; margin: 20px 0; display: none;"></audio>
+            </div>
+
+            <div class="feedback-message" id="pronunciationFeedback"></div>
+        </div>
+
+        <!-- Tab Mengenali Huruf/Kalimat -->
+        <div id="recognition" class="content">
+            <div class="letter-recognition">
+                <h2 style="color: #2196f3; text-align: center; margin-bottom: 20px;">
+                    🔤 Mengenal Huruf dan Kalimat
+                </h2>
+
+                <div class="score-display">
+                    Skor: <span id="recognitionScore">0</span>
+                </div>
+
+                <div id="recognitionGame">
+                    <!-- Game 1: Kenali Huruf Awal -->
+                    <div id="letterGame" style="display: block;">
+                        <h3 style="text-align: center; color: #333; margin: 20px 0;">
+                            Huruf apa yang mengawali kata: <span class="word-highlight" id="targetWord">KUCING</span>?
+                        </h3>
+
+                        <div class="letter-grid" id="letterOptions"></div>
+                    </div>
+
+                    <!-- Game 2: Susun Kalimat -->
+                    <div id="sentenceGame" style="display: none;">
+                        <h3 style="text-align: center; color: #333; margin: 20px 0;">
+                            Susun kata-kata ini menjadi kalimat yang benar:
+                        </h3>
+
+                        <div class="sentence-builder" id="sentenceBuilder">
+                            <p style="color: #999;">Tarik kata ke sini...</p>
+                        </div>
+
+                        <div class="word-options" id="wordOptionsContainer"></div>
+
+                        <div class="controls">
+                            <button class="btn btn-success" onclick="checkSentence()">
+                                ✅ Periksa Jawaban
+                            </button>
+                            <button class="btn btn-info" onclick="resetSentence()">
+                                🔄 Ulang
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Game 3: Cocokkan Kata -->
+                    <div id="matchGame" style="display: none;">
+                        <h3 style="text-align: center; color: #333; margin: 20px 0;">
+                            Pilih kata yang tepat untuk melengkapi kalimat:
+                        </h3>
+
+                        <div style="background: white; padding: 25px; border-radius: 15px; margin: 20px 0; font-size: 1.5em; text-align: center;">
+                            <span id="sentenceTemplate"></span>
+                        </div>
+
+                        <div class="word-options" id="matchOptions"></div>
+                    </div>
+                </div>
+
+                <div class="controls" style="margin-top: 30px;">
+                    <button class="btn btn-info" onclick="switchRecognitionGame('letter')">
+                        🔤 Game Huruf
+                    </button>
+                    <button class="btn btn-info" onclick="switchRecognitionGame('sentence')">
+                        📝 Game Susun Kalimat
+                    </button>
+                    <button class="btn btn-info" onclick="switchRecognitionGame('match')">
+                        🎯 Game Cocokkan Kata
+                    </button>
+                </div>
+            </div>
+
+            <div class="feedback-message" id="recognitionFeedback"></div>
+        </div>
+    </div>
+
+    <script>
+        // Data cerita
+        const storyText = `Aku punya kucing. Namanya Si Putih. Bulu Si Putih putih sekali. Matanya bulat. Kakinya kecil. Si Putih suka makan. Si Putih suka tidur. Si Putih suka main bola. Aku sayang Si Putih. Si Putih temanku.`;
+        
+        const storyParagraphs = [
+            "Aku punya kucing. Namanya Si Putih. Bulu Si Putih putih sekali. Matanya bulat. Kakinya kecil.",
+            "Si Putih suka makan. Si Putih suka tidur. Si Putih suka main bola.",
+            "Aku sayang Si Putih. Si Putih temanku."
+        ];
+
+        const practiceWords = [
+            { word: "kucing", syllables: "ku-cing" },
+            { word: "Si Putih", syllables: "Si Pu-tih" },
+            { word: "bulu", syllables: "bu-lu" },
+            { word: "mata", syllables: "ma-ta" },
+            { word: "kaki", syllables: "ka-ki" },
+            { word: "makan", syllables: "ma-kan" },
+            { word: "tidur", syllables: "ti-dur" },
+            { word: "main", syllables: "ma-in" },
+            { word: "sayang", syllables: "sa-yang" },
+            { word: "teman", syllables: "te-man" }
+        ];
+
+        const letterGameWords = [
+            { word: "KUCING", letter: "K", options: ["K", "P", "M", "B"] },
+            { word: "PUTIH", letter: "P", options: ["P", "K", "T", "M"] },
+            { word: "BULU", letter: "B", options: ["B", "P", "M", "K"] },
+            { word: "MATA", letter: "M", options: ["M", "K", "B", "T"] },
+            { word: "TIDUR", letter: "T", options: ["T", "M", "K", "P"] }
+        ];
+
+        const sentenceGames = [
+            { words: ["Aku", "punya", "kucing"], correct: "Aku punya kucing" },
+            { words: ["Namanya", "Si", "Putih"], correct: "Namanya Si Putih" },
+            { words: ["Si", "Putih", "temanku"], correct: "Si Putih temanku" }
+        ];
+
+        const matchGames = [
+            { template: "Aku punya ___", options: ["kucing", "bola", "rumah"], correct: "kucing" },
+            { template: "Namanya Si ___", options: ["Hitam", "Putih", "Merah"], correct: "Putih" },
+            { template: "Si Putih suka ___", options: ["makan", "terbang", "berenang"], correct: "makan" }
+        ];
+
+        let speechSynth = window.speechSynthesis;
+        let timesListened = 0;
+        let currentWordIndex = 0;
+        let wordScore = 0;
+        let recognitionScore = 0;
+        let mediaRecorder;
+        let audioChunks = [];
+        let currentLetterGameIndex = 0;
+        let currentSentenceGameIndex = 0;
+        let currentMatchGameIndex = 0;
+        let selectedWords = [];
+
+        function showTab(tabName) {
+            const contents = document.querySelectorAll('.content');
+            const tabs = document.querySelectorAll('.tab');
+            
+            contents.forEach(content => content.classList.remove('active'));
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            stopSpeaking();
+
+            if (tabName === 'pronunciation') {
+                loadWord();
+            } else if (tabName === 'recognition') {
+                loadLetterGame();
+            }
+        }
+
+        // === TAB MENDENGARKAN ===
+        function playFullStory() {
+            document.getElementById('storyDisplay').innerHTML = `<p>${storyText}</p>`;
+            document.getElementById('soundWave').style.display = 'block';
+            
+            speak(storyText, 1.0, () => {
+                document.getElementById('soundWave').style.display = 'none';
+                timesListened++;
+                updateListeningProgress();
+                showListeningFeedback("Hebat! Kamu sudah mendengarkan cerita lengkap! 🎉");
+            });
+        }
+
+        function playByParagraph() {
+            let currentParagraph = 0;
+            
+            function playNext() {
+                if (currentParagraph < storyParagraphs.length) {
+                    document.getElementById('storyDisplay').innerHTML = `
+                        <p><strong>Paragraf ${currentParagraph + 1}:</strong></p>
+                        <p>${storyParagraphs[currentParagraph]}</p>
+                    `;
+                    document.getElementById('soundWave').style.display = 'block';
+                    
+                    speak(storyParagraphs[currentParagraph], 1.0, () => {
+                        currentParagraph++;
+                        setTimeout(playNext, 1000);
+                    });
+                } else {
+                    document.getElementById('soundWave').style.display = 'none';
+                    timesListened++;
+                    updateListeningProgress();
+                    showListeningFeedback("Bagus! Kamu mendengarkan dengan sabar! 👏");
+                }
+            }
+            
+            playNext();
+        }
+
+        function playSlowly() {
+            document.getElementById('storyDisplay').innerHTML = `
+                <p><strong>Mode Pelan:</strong></p>
+                <p>${storyText}</p>
+            `;
+            document.getElementById('soundWave').style.display = 'block';
+            
+            speak(storyText, 0.7, () => {
+                document.getElementById('soundWave').style.display = 'none';
+                timesListened++;
+                updateListeningProgress();
+                showListeningFeedback("Bagus! Dengar pelan-pelan membantu pemahamanmu! 🐢✨");
+            });
+        }
+
+        function updateListeningProgress() {
+            document.getElementById('timesListened').textContent = timesListened;
+            const progress = Math.min((timesListened / 5) * 100, 100);
+            document.getElementById('listeningProgress').style.width = progress + '%';
+            document.getElementById('listeningProgress').textContent = Math.round(progress) + '%';
+        }
+
+        function showListeningFeedback(message) {
+            const feedback = document.getElementById('listeningFeedback');
+            feedback.textContent = message;
+            feedback.className = 'feedback-message success show';
+            setTimeout(() => {
+                feedback.classList.remove('show');
+            }, 3000);
+        }
+
+        // === TAB MENIRUKAN ===
+        function loadWord() {
+            const wordData = practiceWords[currentWordIndex];
+            document.getElementById('currentWord').textContent = wordData.word;
+            document.getElementById('wordSyllables').textContent = wordData.syllables;
+            document.getElementById('wordScore').textContent = wordScore;
+        }
+
+        function speakCurrentWord() {
+            const word = practiceWords[currentWordIndex].word;
+            speak(word, 0.8);
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    
+                    const audioPlayer = document.getElementById('playbackAudio');
+                    audioPlayer.src = audioUrl;
+                    audioPlayer.style.display = 'block';
+                    
+                    stream.getTracks().forEach(track => track.stop());
+                    
+                    showPronunciationFeedback("Bagus! Dengarkan rekamanmu dan coba lagi! 🎤✨");
+                };
+                
+                mediaRecorder.start();
+                
+                document.getElementById('recordBtn').style.display = 'none';
+                document.getElementById('stopRecordBtn').style.display = 'inline-flex';
+                document.getElementById('recordingIndicator').style.display = 'block';
+                document.getElementById('micStatus').textContent = '🎤 Sedang merekam... Ucapkan kata dengan jelas!';
+                
+            } catch (error) {
+                alert('Tidak dapat mengakses mikrofon. Pastikan izin mikrofon diaktifkan.');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                
+                document.getElementById('recordBtn').style.display = 'inline-flex';
+                document.getElementById('stopRecordBtn').style.display = 'none';
+                document.getElementById('recordingIndicator').style.display = 'none';
+                document.getElementById('micStatus').textContent = '✅ Rekaman selesai! Dengarkan hasil rekamanmu.';
+                
+                wordScore++;
+                document.getElementById('wordScore').textContent = wordScore;
+            }
+        }
+
+        function nextWord() {
+            currentWordIndex = (currentWordIndex + 1) % practiceWords.length;
+            loadWord();
+            document.getElementById('playbackAudio').style.display = 'none';
+            document.getElementById('micStatus').textContent = 'Klik tombol rekam untuk meniru kata';
+            speakCurrentWord();
+        }
+
+        function showPronunciationFeedback(message) {
+            const feedback = document.getElementById('pronunciationFeedback');
+            feedback.textContent = message;
+            feedback.className = 'feedback-message success show';
+            setTimeout(() => {
+                feedback.classList.remove('show');
+            }, 3000);
+        }
+
+        // === TAB MENGENALI ===
+        function switchRecognitionGame(gameType) {
+            document.getElementById('letterGame').style.display = 'none';
+            document.getElementById('sentenceGame').style.display = 'none';
+            document.getElementById('matchGame').style.display = 'none';
+
+            if (gameType === 'letter') {
+                document.getElementById('letterGame').style.display = 'block';
+                loadLetterGame();
+            } else if (gameType === 'sentence') {
+                document.getElementById('sentenceGame').style.display = 'block';
+                loadSentenceGame();
+            } else if (gameType === 'match') {
+                document.getElementById('matchGame').style.display = 'block';
+                loadMatchGame();
+            }
+        }
+
+        function loadLetterGame() {
+            const game = letterGameWords[currentLetterGameIndex];
+            document.getElementById('targetWord').textContent = game.word;
+            
+            const container = document.getElementById('letterOptions');
+            container.innerHTML = '';
+            
+            game.options.sort(() => Math.random() - 0.5);
+            
+            game.options.forEach(letter => {
+                const box = document.createElement('div');
+                box.className = 'letter-box';
+                box.textContent = letter;
+                box.onclick = () => checkLetter(letter, game.letter, box);
+                container.appendChild(box);
+            });
+
+            speak(`Huruf apa yang mengawali kata ${game.word}?`, 0.9);
+        }
+
+        function checkLetter(selected, correct, element) {
+            const allBoxes = document.querySelectorAll('.letter-box');
+            allBoxes.forEach(box => box.style.pointerEvents = 'none');
+
+            if (selected === correct) {
+                element.classList.add('correct');
+                recognitionScore += 10;
+                document.getElementById('recognitionScore').textContent = recognitionScore;
+                showRecognitionFeedback(`🎉 Benar! Huruf "${correct}" mengawali kata!`);
+                speak('Benar! Hebat sekali!');
+                
+                setTimeout(() => {
+                    currentLetterGameIndex = (currentLetterGameIndex + 1) % letterGameWords.length;
+                    loadLetterGame();
+                    allBoxes.forEach(box => box.style.pointerEvents = 'auto');
+                }, 2000);
+            } else {
+                element.classList.add('wrong');
+                showRecognitionFeedback(`❌ Coba lagi! Bukan huruf "${selected}".`);
+                speak('Coba lagi ya!');
+                
+                setTimeout(() => {
+                    element.classList.remove('wrong');
+                    allBoxes.forEach(box => box.style.pointerEvents = 'auto');
+                }, 1000);
+            }
+        }
+
+        function loadSentenceGame() {
+            selectedWords = [];
+            const game = sentenceGames[currentSentenceGameIndex];
+            
+            document.getElementById('sentenceBuilder').innerHTML = '<p style="color: #999;">Tarik kata ke sini...</p>';
+            
+            const container = document.getElementById('wordOptionsContainer');
+            container.innerHTML = '';
+            
+            const shuffled = [...game.words].sort(() => Math.random() - 0.5);
+            
+            shuffled.forEach(word => {
+                const chip = document.createElement('div');
+                chip.className = 'word-chip';
+                chip.textContent = word;
+                chip.onclick = () => addWordToSentence(word, chip);
+                container.appendChild(chip);
+            });
+
+            speak('Susun kata-kata ini menjadi kalimat yang benar', 0.9);
+        }
+
+        function addWordToSentence(word, element) {
+            if (!selectedWords.includes(word)) {
+                selectedWords.push(word);
+                element.style.opacity = '0.3';
+                element.style.pointerEvents = 'none';
+                
+                updateSentenceBuilder();
+            }
+        }
+
+        function updateSentenceBuilder() {
+            const builder = document.getElementById('sentenceBuilder');
+            
+            if (selectedWords.length === 0) {
+                builder.innerHTML = '<p style="color: #999;">Tarik kata ke sini...</p>';
+            } else {
+                builder.innerHTML = '';
+                selectedWords.forEach((word, index) => {
+                    const chip = document.createElement('div');
+                    chip.className = 'word-chip';
+                    chip.textContent = word;
+                    chip.style.cursor = 'pointer';
+                    chip.onclick = () => removeWord(index);
+                    builder.appendChild(chip);
+                });
+            }
+        }
+
+        function removeWord(index) {
+            const word = selectedWords[index];
+            selectedWords.splice(index, 1);
+            updateSentenceBuilder();
+            
+            const chips = document.querySelectorAll('#wordOptionsContainer .word-chip');
+            chips.forEach(chip => {
+                if (chip.textContent === word) {
+                    chip.style.opacity = '1';
+                    chip.style.pointerEvents = 'auto';
+                }
+            });
+        }
+
+        function checkSentence() {
+            const game = sentenceGames[currentSentenceGameIndex];
+            const userSentence = selectedWords.join(' ');
+            
+            if (userSentence === game.correct) {
+                recognitionScore += 20;
+                document.getElementById('recognitionScore').textContent = recognitionScore;
+                showRecognitionFeedback('🎉 Sempurna! Kalimatnya benar!');
+                speak('Sempurna! Kalimatnya benar!');
+                
+                setTimeout(() => {
+                    currentSentenceGameIndex = (currentSentenceGameIndex + 1) % sentenceGames.length;
+                    loadSentenceGame();
+                }, 2000);
+            } else {
+                showRecognitionFeedback('❌ Belum tepat. Coba susun ulang!');
+                speak('Belum tepat. Coba lagi ya!');
+            }
+        }
+
+        function resetSentence() {
+            selectedWords = [];
+            loadSentenceGame();
+        }
+
+        function loadMatchGame() {
+            const game = matchGames[currentMatchGameIndex];
+            document.getElementById('sentenceTemplate').innerHTML = game.template.replace('___', '<span style="color: #ff6b6b; font-weight: bold;">___</span>');
+            
+            const container = document.getElementById('matchOptions');
+            container.innerHTML = '';
+            
+            game.options.forEach(word => {
+                const chip = document.createElement('div');
+                chip.className = 'word-chip';
+                chip.textContent = word;
+                chip.onclick = () => checkMatch(word, game.correct);
+                container.appendChild(chip);
+            });
+
+            speak(`Pilih kata yang tepat untuk melengkapi kalimat`, 0.9);
+        }
+
+        function checkMatch(selected, correct) {
+            const allChips = document.querySelectorAll('#matchOptions .word-chip');
+            allChips.forEach(chip => chip.style.pointerEvents = 'none');
+
+            if (selected === correct) {
+                recognitionScore += 15;
+                document.getElementById('recognitionScore').textContent = recognitionScore;
+                
+                const template = matchGames[currentMatchGameIndex].template;
+                document.getElementById('sentenceTemplate').textContent = template.replace('___', selected);
+                
+                showRecognitionFeedback('🎉 Tepat sekali! Kata yang benar!');
+                speak('Tepat sekali!');
+                
+                setTimeout(() => {
+                    currentMatchGameIndex = (currentMatchGameIndex + 1) % matchGames.length;
+                    loadMatchGame();
+                    allChips.forEach(chip => chip.style.pointerEvents = 'auto');
+                }, 2000);
+            } else {
+                showRecognitionFeedback('❌ Belum tepat. Pilih kata lain!');
+                speak('Belum tepat. Coba lagi!');
+                
+                setTimeout(() => {
+                    allChips.forEach(chip => chip.style.pointerEvents = 'auto');
+                }, 1000);
+            }
+        }
+
+        function showRecognitionFeedback(message) {
+            const feedback = document.getElementById('recognitionFeedback');
+            feedback.textContent = message;
+            feedback.className = 'feedback-message success show';
+            setTimeout(() => {
+                feedback.classList.remove('show');
+            }, 3000);
+        }
+
+        // === FUNGSI UMUM ===
+        function speak(text, rate = 0.9, onEnd) {
+            if (speechSynth.speaking) {
+                speechSynth.cancel();
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            utterance.rate = rate;
+            utterance.pitch = 1.1;
+            utterance.volume = 1.0;
+            
+            if (onEnd) {
+                utterance.onend = onEnd;
+            }
+            
+            speechSynth.speak(utterance);
+        }
+
+        function stopSpeaking() {
+            if (speechSynth.speaking) {
+                speechSynth.cancel();
+            }
+        }
+
+        // Inisialisasi saat halaman dimuat
+        window.onload = function() {
+            setTimeout(() => {
+                speak('Halo! Selamat datang! Ayo belajar tentang Kucingku Si Putih!');
+            }, 1000);
+        };
+
+        // Mencegah kehilangan progress saat menutup halaman
+        window.addEventListener('beforeunload', function(e) {
+            if (timesListened > 0 || wordScore > 0 || recognitionScore > 0) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>
