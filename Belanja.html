@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belanja di Pasar - Permainan Membaca</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #FFE5B4 0%, #FFCCCB 50%, #E0E6FF 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .header h1 {
+            color: #FF6B6B;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .star-dashboard {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .star {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .star.active {
+            color: #FFD700;
+            transform: scale(1.2);
+            animation: starTwinkle 1s ease-in-out;
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { transform: scale(1.2); }
+            50% { transform: scale(1.4); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .game-area {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        .story-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border: 3px solid #FF9FF3;
+        }
+
+        .story-title {
+            color: #FF6B6B;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 20px;
+            text-decoration: underline;
+        }
+
+        .story-text {
+            line-height: 1.8;
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .story-text .highlight {
+            background: #FFEB3B;
+            padding: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .story-text .highlight:hover {
+            background: #FFC107;
+            transform: scale(1.05);
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .activity-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border: 3px solid #4ECDC4;
+        }
+
+        .activity-title {
+            color: #4ECDC4;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .drawing-canvas {
+            width: 100%;
+            height: 300px;
+            border: 3px dashed #FF9FF3;
+            border-radius: 10px;
+            cursor: crosshair;
+            background: white;
+            margin-bottom: 15px;
+        }
+
+        .canvas-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .color-btn.active {
+            border-color: #333;
+            transform: scale(1.2);
+        }
+
+        .sentence-input {
+            width: 100%;
+            padding: 15px;
+            border: 3px solid #FF9FF3;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-family: 'Comic Sans MS', cursive;
+            margin-bottom: 15px;
+            background: #FFFACD;
+        }
+
+        .sentence-input:focus {
+            outline: none;
+            border-color: #FF6B6B;
+            box-shadow: 0 0 10px rgba(255,107,107,0.3);
+        }
+
+        .word-bank {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .word-chip {
+            background: #E1F5FE;
+            border: 2px solid #4ECDC4;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .word-chip:hover {
+            background: #4ECDC4;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .feedback {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feedback.success {
+            background: #C8E6C9;
+            color: #2E7D32;
+            opacity: 1;
+        }
+
+        .feedback.error {
+            background: #FFCDD2;
+            color: #C62828;
+            opacity: 1;
+        }
+
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .heart {
+            position: absolute;
+            color: #FF69B4;
+            font-size: 20px;
+            animation: float-up 3s ease-out forwards;
+        }
+
+        @keyframes float-up {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) scale(1.5);
+            }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #E0E0E0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: #F0F0F0;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts" id="heartsContainer"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🛒 Belanja di Pasar 🛒</h1>
+            <p style="color: #666; font-size: 1.2rem;">Permainan Membaca untuk Pemula</p>
+        </div>
+
+        <div class="star-dashboard">
+            <span class="star" data-star="1">⭐</span>
+            <span class="star" data-star="2">⭐</span>
+            <span class="star" data-star="3">⭐</span>
+            <span class="star" data-star="4">⭐</span>
+            <span class="star" data-star="5">⭐</span>
+            <span style="margin-left: 10px; font-weight: bold; color: #333;">Bintang Diri: <span id="starCount">0</span>/5</span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="game-area">
+            <div class="story-section">
+                <h2 class="story-title">📖 Cerita: Belanja di Pasar</h2>
+                <div class="story-text" id="storyText">
+                    <p>Pagi ini aku pergi ke <span class="highlight" data-word="pasar">pasar</span> bersama <span class="highlight" data-word="ibu">ibu</span>. Pasar sangat <span class="highlight" data-word="ramai">ramai</span> dan banyak penjual <span class="highlight" data-word="sayur">sayur</span>.</p>
+                    
+                    <p>Ibu membeli <span class="highlight" data-word="wortel">wortel</span>, <span class="highlight" data-word="bayam">bayam</span>, dan <span class="highlight" data-word="tomat">tomat</span> segar. Aku melihat <span class="highlight" data-word="ikan">ikan</span> besar di meja penjual.</p>
+                    
+                    <p>Penjual <span class="highlight" data-word="tersenyum">tersenyum</span> sambil membungkus ikan. Aku membantu ibu membawa <span class="highlight" data-word="kantong">kantong</span> belanja.</p>
+                    
+                    <p>Kami <span class="highlight" data-word="pulang">pulang</span> dengan <span class="highlight" data-word="senang">senang</span> hati.</p>
+                </div>
+                <div class="controls">
+                    <button class="btn" onclick="readStory()">🔊 Baca Cerita</button>
+                    <button class="btn" onclick="highlightWords()">✨ Sorot Kata</button>
+                    <button class="btn" onclick="playWordGame()">🎮 Main Kata</button>
+                </div>
+            </div>
+
+            <div class="activity-section">
+                <h2 class="activity-title">🎨 Aktivitas Siswa</h2>
+                
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="showTab('drawing')">🎨 Menggambar</button>
+                    <button class="tab-btn" onclick="showTab('writing')">✏️ Menulis</button>
+                </div>
+
+                <div id="drawing" class="tab-content active">
+                    <p style="text-align: center; margin-bottom: 15px; color: #666;">Gambar bagian cerita favoritmu!</p>
+                    <canvas class="drawing-canvas" id="drawingCanvas"></canvas>
+                    <div class="canvas-controls">
+                        <div class="color-btn active" style="background: #FF6B6B;" onclick="setColor('#FF6B6B')"></div>
+                        <div class="color-btn" style="background: #4ECDC4;" onclick="setColor('#4ECDC4')"></div>
+                        <div class="color-btn" style="background: #FFD93D;" onclick="setColor('#FFD93D')"></div>
+                        <div class="color-btn" style="background: #6BCF7F;" onclick="setColor('#6BCF7F')"></div>
+                        <div class="color-btn" style="background: #4D4D4D;" onclick="setColor('#4D4D4D')"></div>
+                        <button class="btn" onclick="clearCanvas()">🗑️ Hapus</button>
+                        <button class="btn" onclick="saveDrawing()">💾 Simpan</button>
+                    </div>
+                </div>
+
+                <div id="writing" class="tab-content">
+                    <p style="text-align: center; margin-bottom: 15px; color: #666;">Tulis kalimat tentang cerita!</p>
+                    <div class="word-bank">
+                        <span class="word-chip" onclick="addWord('aku')">aku</span>
+                        <span class="word-chip" onclick="addWord('ibu')">ibu</span>
+                        <span class="word-chip" onclick="addWord('pasar')">pasar</span>
+                        <span class="word-chip" onclick="addWord('sayur')">sayur</span>
+                        <span class="word-chip" onclick="addWord('ikan')">ikan</span>
+                        <span class="word-chip" onclick="addWord('senang')">senang</span>
+                    </div>
+                    <textarea class="sentence-input" id="sentenceInput" placeholder="Tulis kalimatmu di sini..."></textarea>
+                    <div class="controls">
+                        <button class="btn" onclick="checkSentence()">✅ Periksa Kalimat</button>
+                        <button class="btn" onclick="readSentence()">🔊 Baca Kalimat</button>
+                        <button class="btn" onclick="clearSentence()">🗑️ Hapus</button>
+                    </div>
+                </div>
+
+                <div class="feedback" id="feedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let currentColor = '#FF6B6B';
+        let isDrawing = false;
+        let canvas, ctx;
+        let stars = 0;
+        let progress = 0;
+        let gameData = {
+            wordsFound: [],
+            sentencesWritten: [],
+            drawingsCompleted: 0
+        };
+
+        // Story words for fry word recognition
+        const fryWords = ['aku', 'ibu', 'pasar', 'ramai', 'sayur', 'wortel', 'bayam', 'tomat', 'ikan', 'tersenyum', 'kantong', 'pulang', 'senang'];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCanvas();
+            updateProgress();
+            
+            // Add click listeners to highlighted words
+            document.querySelectorAll('.highlight').forEach(word => {
+                word.addEventListener('click', function() {
+                    speakText(this.textContent);
+                    addWordToFound(this.textContent);
+                    createHearts(this);
+                });
+            });
+
+            // Add star click listeners
+            document.querySelectorAll('.star').forEach(star => {
+                star.addEventListener('click', function() {
+                    const starNumber = parseInt(this.dataset.star);
+                    setStars(starNumber);
+                });
+            });
+        });
+
+        function initializeCanvas() {
+            canvas = document.getElementById('drawingCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.lineWidth = 3;
+            
+            // Mouse events
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            
+            // Touch events for mobile
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            ctx.strokeStyle = currentColor;
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 
+                                             e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }
+
+        function setColor(color) {
+            currentColor = color;
+            document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            showFeedback('Canvas dibersihkan! 🧹', 'success');
+        }
+
+        function saveDrawing() {
+            gameData.drawingsCompleted++;
+            addStar();
+            showFeedback('Gambar tersimpan! Bagus sekali! 🎨✨', 'success');
+            createCelebration();
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function addWord(word) {
+            const input = document.getElementById('sentenceInput');
+            input.value += (input.value ? ' ' : '') + word;
+            input.focus();
+        }
+
+        function checkSentence() {
+            const sentence = document.getElementById('sentenceInput').value.trim();
+            if (sentence.length < 5) {
+                showFeedback('Coba tulis kalimat yang lebih panjang! 📝', 'error');
+                return;
+            }
+            
+            const foundFryWords = fryWords.filter(word => 
+                sentence.toLowerCase().includes(word.toLowerCase())
+            );
+            
+            if (foundFryWords.length > 0) {
+                gameData.sentencesWritten.push(sentence);
+                addStar();
+                showFeedback(`Bagus! Kamu menggunakan kata: ${foundFryWords.join(', ')} ⭐`, 'success');
+                createCelebration();
+            } else {
+                showFeedback('Coba gunakan kata-kata dari cerita! 🤔', 'error');
+            }
+        }
+
+        function readSentence() {
+            const sentence = document.getElementById('sentenceInput').value;
+            if (sentence.trim()) {
+                speakText(sentence);
+            } else {
+                speakText('Silakan tulis kalimat terlebih dahulu');
+            }
+        }
+
+        function clearSentence() {
+            document.getElementById('sentenceInput').value = '';
+            showFeedback('Kalimat dihapus! ✏️', 'success');
+        }
+
+        function readStory() {
+            const storyText = `
+                Belanja di Pasar.
+                Pagi ini aku pergi ke pasar bersama ibu. Pasar sangat ramai dan banyak penjual sayur.
+                Ibu membeli wortel, bayam, dan tomat segar. Aku melihat ikan besar di meja penjual.
+                Penjual tersenyum sambil membungkus ikan. Aku membantu ibu membawa kantong belanja.
+                Kami pulang dengan senang hati.
+            `;
+            speakText(storyText);
+            addStar();
+        }
+
+        function highlightWords() {
+            const highlights = document.querySelectorAll('.highlight');
+            highlights.forEach((word, index) => {
+                setTimeout(() => {
+                    word.style.animation = 'none';
+                    setTimeout(() => {
+                        word.style.animation = 'starTwinkle 0.5s ease-in-out';
+                    }, 10);
+                }, index * 200);
+            });
+            addStar();
+        }
+
+        function playWordGame() {
+            const words = ['pasar', 'ibu', 'sayur', 'ikan', 'senang'];
+            const randomWord = words[Math.floor(Math.random() * words.length)];
+            
+            const userAnswer = prompt(`Cari kata "${randomWord}" dalam cerita! Ketik kata yang kamu temukan:`);
+            
+            if (userAnswer && userAnswer.toLowerCase() === randomWord.toLowerCase()) {
+                addStar();
+                showFeedback(`Benar! Kamu menemukan kata "${randomWord}" 🎉`, 'success');
+                createCelebration();
+            } else {
+                showFeedback(`Coba lagi! Cari kata "${randomWord}" dalam cerita 🔍`, 'error');
+            }
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'id-ID';
+                utterance.rate = 0.8;
+                utterance.pitch = 1.1;
+                speechSynthesis.speak(utterance);
+            } else {
+                alert('Browser tidak mendukung fitur suara');
+            }
+        }
+
+        function addWordToFound(word) {
+            if (!gameData.wordsFound.includes(word)) {
+                gameData.wordsFound.push(word);
+                updateProgress();
+            }
+        }
+
+        function setStars(count) {
+            stars = count;
+            updateStars();
+            showFeedback(`Kamu memberi diri ${count} bintang! ⭐`, 'success');
+            createCelebration();
+        }
+
+        function addStar() {
+            if (stars < 5) {
+                stars++;
+                updateStars();
+                updateProgress();
+            }
+        }
+
+        function updateStars() {
+            const starElements = document.querySelectorAll('.star');
+            starElements.forEach((star, index) => {
+                if (index < stars) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+            document.getElementById('starCount').textContent = stars;
+        }
+
+        function updateProgress() {
+            const totalActivities = 10; // Total possible activities
+            const completed = gameData.wordsFound.length + gameData.sentencesWritten.length + gameData.drawingsCompleted + stars;
+            progress = Math.min((completed / totalActivities) * 100, 100);
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function showFeedback(message, type) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.className = `feedback ${type}`;
+            
+            setTimeout(() => {
+                feedback.classList.remove('success', 'error');
+                feedback.style.opacity = '0';
+            }, 3000);
+        }
+
+        function createHearts(element) {
+            const rect = element.getBoundingClientRect();
+            
+            for (let i = 0; i < 5; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = '💖';
+                heart.style.left = (rect.left + Math.random() * rect.width) + 'px';
+                heart.style.top = rect.top + 'px';
+                
+                document.getElementById('heartsContainer').appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, 3000);
+            }
+        }
+
+        function createCelebration() {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const celebration = document.createElement('div');
+                    celebration.style.position = 'fixed';
+                    celebration.style.left = Math.random() * window.innerWidth + 'px';
+                    celebration.style.top = '-50px';
+                    celebration.style.fontSize = '30px';
+                    celebration.style.zIndex = '9999';
+                    celebration.style.pointerEvents = 'none';
+                    celebration.textContent = ['🎉', '🎊', '✨', '🌟', '⭐'][Math.floor(Math.random() * 5)];
+                    celebration.style.animation = 'float-up 3s ease-out forwards';
+                    
+                    document.body.appendChild(celebration);
+                    
+                    setTimeout(() => {
+                        celebration.remove();
+                    }, 3000);
+                }, i * 100);
+            }
+        }
+
+        // Auto-save progress
+        setInterval(() => {
+            localStorage.setItem('fryWordGameProgress', JSON.stringify({
+                stars: stars,
+                gameData: gameData,
+                progress: progress
+            }));
+        }, 5000);
+    </script>
+</body>
+</html>
