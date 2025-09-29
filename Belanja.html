@@ -349,6 +349,14 @@
         .tab-content.active {
             display: block;
         }
+        .bounce-anim {
+            animation: highlightBounce 0.5s ease;
+        }
+        @keyframes highlightBounce {
+            0%   { transform: scale(1); background-color: #fff176; color:black }
+            50%  { transform: scale(3); background-color: green;color:yellow }
+            100% { transform: scale(1); background-color: #fff176; color:black }
+        }
     </style>
 </head>
 <body>
@@ -612,14 +620,19 @@
 
         function highlightWords() {
             const highlights = document.querySelectorAll('.highlight');
-            highlights.forEach((word, index) => {
-                setTimeout(() => {
-                    word.style.animation = 'none';
-                    setTimeout(() => {
-                        word.style.animation = 'starTwinkle 0.5s ease-in-out';
-                    }, 10);
-                }, index * 200);
-            });
+      
+      highlights.forEach((word, index) => {
+        setTimeout(() => {
+          // hapus class animasi kalau ada
+          word.classList.remove('bounce-anim');
+
+          // paksa reflow agar animasi bisa diulang
+          void word.offsetWidth;
+
+          // tambahkan lagi class animasi
+          word.classList.add('bounce-anim');
+            }, index * 700); // jeda antar kata
+          });
             addStar();
         }
 
