@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pelangi di Pagi Hari - Belajar Membaca Bersama</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 950px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 10px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reading-area {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 4px solid #ff7f50;
+        }
+
+        .sentence {
+            font-size: 1.5em;
+            line-height: 2.2;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .sentence:hover {
+            background: #f0f7ff;
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .sentence.reading {
+            background: #fffacd;
+            border-left-color: #ffd700;
+            animation: highlightPulse 1s infinite;
+        }
+
+        .sentence.completed {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        @keyframes highlightPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+        }
+
+        .sentence-number {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+            color: white;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 3px solid #667eea;
+        }
+
+        .progress-bar-container {
+            background: #e0e0e0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        .task-list {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .task-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border: 3px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+
+        .task-item.locked {
+            opacity: 0.5;
+            background: #f5f5f5;
+        }
+
+        .task-item.active {
+            border-color: #ffd700;
+            background: #fffacd;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .task-item.completed {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .task-checkbox {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            flex-shrink: 0;
+        }
+
+        .task-item.completed .task-checkbox {
+            background: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .task-description {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .feedback-box {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 3px solid #667eea;
+            text-align: center;
+            display: none;
+        }
+
+        .feedback-box.show {
+            display: block;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .feedback-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .feedback-text {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .feedback-detail {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .rainbow-decoration {
+            text-align: center;
+            font-size: 3em;
+            margin: 20px 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .achievement-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 5px;
+            animation: bounceIn 0.5s;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .reading-companion {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 3px solid #667eea;
+        }
+
+        .companion-avatar {
+            text-align: center;
+            font-size: 5em;
+            margin-bottom: 15px;
+            animation: wave 2s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        .companion-message {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            text-align: center;
+            position: relative;
+        }
+
+        .companion-message:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid white;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2em; }
+            .subtitle { font-size: 1em; }
+            .sentence { font-size: 1.2em; }
+            .btn { padding: 12px 25px; font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌈 Pelangi di Pagi Hari</h1>
+        <p class="subtitle">Belajar Membaca Bersama - Fase A</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('reading')">📖 Baca Bersama</button>
+            <button class="tab" onclick="showTab('tasks')">✅ Tugas Bertahap</button>
+            <button class="tab" onclick="showTab('feedback')">💬 Umpan Balik</button>
+        </div>
+
+        <!-- Tab Baca Bersama -->
+        <div id="reading" class="content active">
+            <div class="reading-companion">
+                <div class="companion-avatar">👩‍🏫</div>
+                <div class="companion-message" id="companionMessage">
+                    Halo! Ayo kita baca cerita tentang pelangi bersama-sama. Klik pada kalimat untuk mendengarkan!
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <h3 style="color: #667eea; margin-bottom: 15px;">📊 Kemajuan Membaca</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="readingProgress">0 / 17</div>
+                </div>
+                <div style="text-align: center; font-size: 1.1em; color: #666;">
+                    <strong id="sentencesRead">0</strong> dari <strong>17</strong> kalimat telah dibaca
+                </div>
+            </div>
+
+            <div class="reading-area">
+                <div class="sentence" data-index="0">
+                    <div class="sentence-number">1</div>
+                    Pagi ini matahari bersinar.
+                </div>
+                <div class="sentence" data-index="1">
+                    <div class="sentence-number">2</div>
+                    Udara segar masuk lewat jendela.
+                </div>
+                <div class="sentence" data-index="2">
+                    <div class="sentence-number">3</div>
+                    Aku berdiri di dekat jendela.
+                </div>
+                <div class="sentence" data-index="3">
+                    <div class="sentence-number">4</div>
+                    Tadi pagi hujan gerimis turun.
+                </div>
+                <div class="sentence" data-index="4">
+                    <div class="sentence-number">5</div>
+                    Sekarang hujan sudah berhenti.
+                </div>
+                <div class="sentence" data-index="5">
+                    <div class="sentence-number">6</div>
+                    Langit biru terlihat.
+                </div>
+                <div class="sentence" data-index="6">
+                    <div class="sentence-number">7</div>
+                    Tiba-tiba aku melihat pelangi.
+                </div>
+                <div class="sentence" data-index="7">
+                    <div class="sentence-number">8</div>
+                    Pelangi itu indah.
+                </div>
+                <div class="sentence" data-index="8">
+                    <div class="sentence-number">9</div>
+                    Warnanya merah, jingga, kuning, hijau, biru, nila, dan ungu.
+                </div>
+                <div class="sentence" data-index="9">
+                    <div class="sentence-number">10</div>
+                    Aku memanggil Ayah, Ibu, dan Adik.
+                </div>
+                <div class="sentence" data-index="10">
+                    <div class="sentence-number">11</div>
+                    Kami melihat pelangi bersama.
+                </div>
+                <div class="sentence" data-index="11">
+                    <div class="sentence-number">12</div>
+                    Kami senang sekali.
+                </div>
+                <div class="sentence" data-index="12">
+                    <div class="sentence-number">13</div>
+                    Tidak lama, pelangi hilang.
+                </div>
+                <div class="sentence" data-index="13">
+                    <div class="sentence-number">14</div>
+                    Aku senang melihat pelangi pagi ini.
+                </div>
+                <div class="sentence" data-index="14">
+                    <div class="sentence-number">15</div>
+                    Pelangi ciptaan Tuhan.
+                </div>
+                <div class="sentence" data-index="15">
+                    <div class="sentence-number">16</div>
+                    Kamu pernah melihat pelangi?
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" onclick="readAllSentences()">
+                    🔊 Baca Semua Kalimat
+                </button>
+                <button class="btn btn-info" onclick="readNextSentence()">
+                    ➡️ Kalimat Berikutnya
+                </button>
+                <button class="btn btn-success" onclick="resetReading()">
+                    🔄 Mulai Ulang
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab Tugas Bertahap -->
+        <div id="tasks" class="content">
+            <div class="rainbow-decoration">🌈</div>
+            
+            <div class="progress-section">
+                <h3 style="color: #667eea; margin-bottom: 15px;">📋 Kemajuan Tugas</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="taskProgress">0 / 5</div>
+                </div>
+            </div>
+
+            <div class="task-list" id="taskList">
+                <div class="task-item active" data-task="0">
+                    <div class="task-checkbox"></div>
+                    <div class="task-content">
+                        <div class="task-title">📖 Tugas 1: Baca Paragraf Pertama</div>
+                        <div class="task-description">Baca 3 kalimat pertama dengan lantang</div>
+                    </div>
+                    <button class="btn btn-primary" style="font-size: 0.9em; padding: 10px 20px;" onclick="completeTask(0)">
+                        Selesai
+                    </button>
+                </div>
+
+                <div class="task-item locked" data-task="1">
+                    <div class="task-checkbox">🔒</div>
+                    <div class="task-content">
+                        <div class="task-title">🌧️ Tugas 2: Ceritakan tentang Hujan</div>
+                        <div class="task-description">Ceritakan apa yang terjadi setelah hujan gerimis</div>
+                    </div>
+                    <button class="btn btn-primary" style="font-size: 0.9em; padding: 10px 20px;" onclick="completeTask(1)" disabled>
+                        Selesai
+                    </button>
+                </div>
+
+                <div class="task-item locked" data-task="2">
+                    <div class="task-checkbox">🔒</div>
+                    <div class="task-content">
+                        <div class="task-title">🎨 Tugas 3: Sebutkan Warna Pelangi</div>
+                        <div class="task-description">Sebutkan 7 warna pelangi dengan urutan yang benar</div>
+                    </div>
+                    <button class="btn btn-primary" style="font-size: 0.9em; padding: 10px 20px;" onclick="completeTask(2)" disabled>
+                        Selesai
+                    </button>
+                </div>
+
+                <div class="task-item locked" data-task="3">
+                    <div class="task-checkbox">🔒</div>
+                    <div class="task-content">
+                        <div class="task-title">👨‍👩‍👧 Tugas 4: Siapa yang Dipanggil?</div>
+                        <div class="task-description">Sebutkan siapa saja yang dipanggil untuk melihat pelangi</div>
+                    </div>
+                    <button class="btn btn-primary" style="font-size: 0.9em; padding: 10px 20px;" onclick="completeTask(3)" disabled>
+                        Selesai
+                    </button>
+                </div>
+
+                <div class="task-item locked" data-task="4">
+                    <div class="task-checkbox">🔒</div>
+                    <div class="task-content">
+                        <div class="task-title">💭 Tugas 5: Refleksi</div>
+                        <div class="task-description">Ceritakan pengalamanmu melihat pelangi</div>
+                    </div>
+                    <button class="btn btn-primary" style="font-size: 0.9em; padding: 10px 20px;" onclick="completeTask(4)" disabled>
+                        Selesai
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Umpan Balik -->
+        <div id="feedback" class="content">
+            <div class="rainbow-decoration">🌈✨</div>
+            
+            <div class="feedback-box show">
+                <div class="feedback-icon">🎉</div>
+                <div class="feedback-text">Statistik Belajarmu</div>
+                <div class="feedback-detail" id="statsDisplay">
+                    <p style="font-size: 1.3em; margin: 15px 0;">
+                        <strong>Kalimat Dibaca:</strong> <span id="totalRead" style="color: #667eea; font-size: 1.5em;">0</span> / 17
+                    </p>
+                    <p style="font-size: 1.3em; margin: 15px 0;">
+                        <strong>Tugas Diselesaikan:</strong> <span id="totalTasks" style="color: #28a745; font-size: 1.5em;">0</span> / 5
+                    </p>
+                    <p style="font-size: 1.3em; margin: 15px 0;">
+                        <strong>Total Waktu Belajar:</strong> <span id="totalTime" style="color: #ff7f00; font-size: 1.5em;">0</span> menit
+                    </p>
+                </div>
+            </div>
+
+            <div id="achievementSection" style="text-align: center; margin: 30px 0;"></div>
+
+            <div class="feedback-box show" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+                <div class="feedback-icon">💬</div>
+                <div class="feedback-text">Pesan dari Guru</div>
+                <div class="companion-message" id="teacherFeedback" style="margin-top: 15px; font-size: 1.2em;">
+                    Terus semangat belajar! Kamu sudah melakukan yang terbaik hari ini! 🌟
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-success" onclick="generateDetailedFeedback()">
+                    📊 Lihat Analisis Lengkap
+                </button>
+                <button class="btn btn-info" onclick="shareFeedback()">
+                    📤 Bagikan Kemajuan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sentencesRead = [];
+        let tasksCompleted = [];
+        let startTime = Date.now();
+        let currentSentenceIndex = 0;
+        const totalSentences = 17;
+        const totalTasks = 5;
+        let speechSynth = window.speechSynthesis;
+
+        // Inisialisasi event listeners untuk setiap kalimat
+        document.querySelectorAll('.sentence').forEach((sentence, index) => {
+            sentence.addEventListener('click', function() {
+                readSentence(index);
+            });
+        });
+
+        function showTab(tabName) {
+            const contents = document.querySelectorAll('.content');
+            const tabs = document.querySelectorAll('.tab');
+            
+            contents.forEach(content => content.classList.remove('active'));
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'feedback') {
+                updateFeedbackStats();
+            }
+
+            stopSpeaking();
+        }
+
+        function readSentence(index) {
+            const sentence = document.querySelectorAll('.sentence')[index];
+            const text = sentence.textContent.trim().replace(/^\d+/, '');
+            
+            // Hapus class reading dari semua kalimat
+            document.querySelectorAll('.sentence').forEach(s => {
+                s.classList.remove('reading');
+            });
+            
+            // Tambahkan class reading ke kalimat yang dipilih
+            sentence.classList.add('reading');
+            
+            // Bacakan teks
+            speak(text, () => {
+                // Setelah selesai dibaca
+                sentence.classList.remove('reading');
+                if (!sentencesRead.includes(index)) {
+                    sentencesRead.push(index);
+                    sentence.classList.add('completed');
+                    updateReadingProgress();
+                    giveFeedback();
+                }
+            });
+
+            currentSentenceIndex = index;
+        }
+
+        function readAllSentences() {
+            currentSentenceIndex = 0;
+            readSequentially();
+        }
+
+        function readSequentially() {
+            if (currentSentenceIndex < totalSentences) {
+                readSentence(currentSentenceIndex);
+                setTimeout(() => {
+                    currentSentenceIndex++;
+                    readSequentially();
+                }, 3000); // Jeda 3 detik antar kalimat
+            } else {
+                updateCompanionMessage("Hebat! Kamu sudah membaca semua kalimat! 🎉");
+            }
+        }
+
+        function readNextSentence() {
+            const nextIndex = sentencesRead.length < totalSentences ? 
+                              sentencesRead.length : 0;
+            readSentence(nextIndex);
+        }
+
+        function resetReading() {
+            sentencesRead = [];
+            currentSentenceIndex = 0;
+            document.querySelectorAll('.sentence').forEach(s => {
+                s.classList.remove('completed', 'reading');
+            });
+            updateReadingProgress();
+            updateCompanionMessage("Mari mulai membaca dari awal! 📖");
+            speak("Mari mulai membaca dari awal!");
+        }
+
+        function updateReadingProgress() {
+            const progress = (sentencesRead.length / totalSentences) * 100;
+            const progressBar = document.getElementById('readingProgress');
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = `${sentencesRead.length} / ${totalSentences}`;
+            
+            document.getElementById('sentencesRead').textContent = sentencesRead.length;
+
+            // Update pesan companion berdasarkan progress
+            if (sentencesRead.length === totalSentences) {
+                updateCompanionMessage("Luar biasa! Kamu telah menyelesaikan semua kalimat! 🌟🎉");
+                speak("Luar biasa! Kamu telah menyelesaikan semua kalimat!");
+            } else if (sentencesRead.length >= totalSentences / 2) {
+                updateCompanionMessage("Bagus sekali! Kamu sudah lebih dari setengah! Terus semangat! 💪");
+            }
+        }
+
+        function updateCompanionMessage(message) {
+            document.getElementById('companionMessage').textContent = message;
+        }
+
+        function giveFeedback() {
+            const messages = [
+                "Bagus sekali! Kamu membaca dengan jelas! 👏",
+                "Hebat! Terus lanjutkan! 🌟",
+                "Keren! Pelafalan kamu bagus! 💯",
+                "Mantap! Ayo baca kalimat berikutnya! 🎯",
+                "Sempurna! Kamu pembaca yang hebat! ⭐"
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            // Tampilkan feedback sebentar
+            if (sentencesRead.length % 3 === 0) {
+                updateCompanionMessage(randomMessage);
+            }
+        }
+
+        function completeTask(taskIndex) {
+            if (tasksCompleted.includes(taskIndex)) return;
+            
+            tasksCompleted.push(taskIndex);
+            
+            const taskItem = document.querySelectorAll('.task-item')[taskIndex];
+            taskItem.classList.remove('active', 'locked');
+            taskItem.classList.add('completed');
+            taskItem.querySelector('.task-checkbox').textContent = '✓';
+            taskItem.querySelector('button').disabled = true;
+            
+            // Unlock tugas berikutnya
+            if (taskIndex < totalTasks - 1) {
+                const nextTask = document.querySelectorAll('.task-item')[taskIndex + 1];
+                nextTask.classList.remove('locked');
+                nextTask.classList.add('active');
+                nextTask.querySelector('.task-checkbox').textContent = '';
+                nextTask.querySelector('button').disabled = false;
+            }
+            
+            updateTaskProgress();
+            
+            const feedbackMessages = [
+                "Tugas 1 selesai! Kamu membaca dengan baik! 📖✨",
+                "Tugas 2 selesai! Ceritamu tentang hujan bagus! 🌧️👍",
+                "Tugas 3 selesai! Kamu hafal semua warna pelangi! 🎨🌈",
+                "Tugas 4 selesai! Tepat sekali! Ayah, Ibu, dan Adik! 👨‍👩‍👧💕",
+                "Tugas 5 selesai! Pengalamanmu menarik sekali! 💭🌟"
+            ];
+            
+            speak(feedbackMessages[taskIndex]);
+            
+            if (tasksCompleted.length === totalTasks) {
+                setTimeout(() => {
+                    showCompletionCelebration();
+                }, 1000);
+            }
+        }
+
+        function updateTaskProgress() {
+            const progress = (tasksCompleted.length / totalTasks) * 100;
+            const progressBar = document.getElementById('taskProgress');
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = `${tasksCompleted.length} / ${totalTasks}`;
+        }
+
+        function showCompletionCelebration() {
+            const achievementSection = document.getElementById('achievementSection');
+            achievementSection.innerHTML = `
+                <div style="font-size: 5em; animation: bounceIn 1s;">🏆</div>
+                <h2 style="color: #667eea; margin: 20px 0;">Selamat!</h2>
+                <p style="font-size: 1.3em; color: #333;">Kamu telah menyelesaikan semua tugas!</p>
+                <div style="margin-top: 20px;">
+                    <span class="achievement-badge">🌟 Pembaca Hebat</span>
+                    <span class="achievement-badge">📚 Penyelesai Tugas</span>
+                    <span class="achievement-badge">🌈 Ahli Pelangi</span>
+                </div>
+            `;
+            
+            speak("Selamat! Kamu telah menyelesaikan semua tugas! Kamu adalah pembaca yang hebat!");
+            showTab('feedback');
+        }
+
+        function updateFeedbackStats() {
+            document.getElementById('totalRead').textContent = sentencesRead.length;
+            document.getElementById('totalTasks').textContent = tasksCompleted.length;
+            
+            const timeSpent = Math.round((Date.now() - startTime) / 60000);
+            document.getElementById('totalTime').textContent = timeSpent < 1 ? '< 1' : timeSpent;
+
+            // Update pesan guru berdasarkan performa
+            let teacherMessage = '';
+            const readPercentage = (sentencesRead.length / totalSentences) * 100;
+            const taskPercentage = (tasksCompleted.length / totalTasks) * 100;
+            
+            if (readPercentage === 100 && taskPercentage === 100) {
+                teacherMessage = "Luar biasa sekali! Kamu menyelesaikan semuanya dengan sempurna! Kamu adalah bintang kelas! ⭐🌟✨";
+            } else if (readPercentage >= 75 || taskPercentage >= 60) {
+                teacherMessage = "Kerja bagus! Kamu sudah belajar dengan sungguh-sungguh. Tetap semangat! 💪📚";
+            } else if (readPercentage >= 50 || taskPercentage >= 40) {
+                teacherMessage = "Bagus! Kamu sudah berusaha dengan baik. Ayo lanjutkan membaca! 🌈📖";
+            } else {
+                teacherMessage = "Terus semangat belajar! Setiap usaha adalah langkah menuju sukses! 🌟💖";
+            }
+            
+            document.getElementById('teacherFeedback').textContent = teacherMessage;
+
+            // Update achievement badges
+            updateAchievements();
+        }
+
+        function updateAchievements() {
+            const achievementSection = document.getElementById('achievementSection');
+            let badges = '<h3 style="color: #667eea; margin-bottom: 15px;">🏅 Pencapaian Kamu</h3>';
+            
+            if (sentencesRead.length >= 5) {
+                badges += '<span class="achievement-badge">📖 Pembaca Pemula</span>';
+            }
+            if (sentencesRead.length >= 10) {
+                badges += '<span class="achievement-badge">📚 Pembaca Aktif</span>';
+            }
+            if (sentencesRead.length === totalSentences) {
+                badges += '<span class="achievement-badge">⭐ Pembaca Sempurna</span>';
+            }
+            if (tasksCompleted.length >= 2) {
+                badges += '<span class="achievement-badge">✅ Rajin Mengerjakan</span>';
+            }
+            if (tasksCompleted.length === totalTasks) {
+                badges += '<span class="achievement-badge">🏆 Master Tugas</span>';
+            }
+            
+            achievementSection.innerHTML = badges;
+        }
+
+        function generateDetailedFeedback() {
+            const readPercentage = Math.round((sentencesRead.length / totalSentences) * 100);
+            const taskPercentage = Math.round((tasksCompleted.length / totalTasks) * 100);
+            const timeSpent = Math.round((Date.now() - startTime) / 60000);
+            
+            let analysis = `
+                <div class="feedback-box show" style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); text-align: left;">
+                    <h3 style="color: #667eea; text-align: center; margin-bottom: 20px;">📊 Analisis Pembelajaran Detail</h3>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h4 style="color: #333; margin-bottom: 10px;">📖 Kemampuan Membaca</h4>
+                        <div style="background: #f0f0f0; height: 20px; border-radius: 10px; overflow: hidden; margin-bottom: 10px;">
+                            <div style="height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); width: ${readPercentage}%;"></div>
+                        </div>
+                        <p style="color: #666;">Kamu sudah membaca <strong>${readPercentage}%</strong> dari cerita!</p>
+                        <p style="color: #666; margin-top: 5px;">
+                            ${readPercentage === 100 ? '✨ Sempurna! Semua kalimat sudah dibaca!' :
+                              readPercentage >= 75 ? '👍 Bagus sekali! Hampir selesai!' :
+                              readPercentage >= 50 ? '📚 Terus lanjutkan membaca!' :
+                              '💪 Ayo baca lebih banyak lagi!'}
+                        </p>
+                    </div>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h4 style="color: #333; margin-bottom: 10px;">✅ Penyelesaian Tugas</h4>
+                        <div style="background: #f0f0f0; height: 20px; border-radius: 10px; overflow: hidden; margin-bottom: 10px;">
+                            <div style="height: 100%; background: linear-gradient(90deg, #56ab2f, #a8e063); width: ${taskPercentage}%;"></div>
+                        </div>
+                        <p style="color: #666;">Kamu menyelesaikan <strong>${taskPercentage}%</strong> tugas!</p>
+                        <p style="color: #666; margin-top: 5px;">
+                            ${taskPercentage === 100 ? '🏆 Luar biasa! Semua tugas selesai!' :
+                              taskPercentage >= 60 ? '⭐ Keren! Terus semangat!' :
+                              taskPercentage >= 40 ? '💡 Bagus! Selesaikan tugasnya ya!' :
+                              '🎯 Ayo kerjakan tugasnya!'}
+                        </p>
+                    </div>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h4 style="color: #333; margin-bottom: 10px;">⏱️ Waktu Belajar</h4>
+                        <p style="color: #666; font-size: 1.2em;">
+                            <strong style="color: #ff7f00; font-size: 1.5em;">${timeSpent < 1 ? '< 1' : timeSpent}</strong> menit
+                        </p>
+                        <p style="color: #666; margin-top: 5px;">
+                            ${timeSpent >= 15 ? '🌟 Wow! Kamu belajar dengan fokus!' :
+                              timeSpent >= 10 ? '👏 Durasi belajar yang bagus!' :
+                              timeSpent >= 5 ? '📚 Waktu belajar yang cukup baik!' :
+                              '⏰ Luangkan waktu lebih banyak untuk belajar ya!'}
+                        </p>
+                    </div>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                        <h4 style="color: #333; margin-bottom: 10px;">💡 Saran untuk Kamu</h4>
+                        <ul style="color: #666; line-height: 1.8; padding-left: 20px;">
+                            ${sentencesRead.length < totalSentences ? '<li>Cobalah membaca kalimat yang belum dibaca</li>' : ''}
+                            ${tasksCompleted.length < totalTasks ? '<li>Selesaikan tugas-tugas yang tersisa</li>' : ''}
+                            <li>Bacalah cerita ini dengan orang tua atau temanmu</li>
+                            <li>Ceritakan kembali isi cerita dengan kata-katamu sendiri</li>
+                            <li>Gambar pemandangan pelangi yang kamu bayangkan</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            const feedbackContent = document.getElementById('feedback');
+            const existingAnalysis = feedbackContent.querySelector('.detailed-analysis');
+            
+            if (existingAnalysis) {
+                existingAnalysis.remove();
+            }
+            
+            const analysisDiv = document.createElement('div');
+            analysisDiv.className = 'detailed-analysis';
+            analysisDiv.innerHTML = analysis;
+            feedbackContent.insertBefore(analysisDiv, feedbackContent.querySelector('.controls'));
+            
+            speak("Analisis lengkap sudah ditampilkan. Ayo lihat kemajuanmu!");
+        }
+
+        function shareFeedback() {
+            const readPercentage = Math.round((sentencesRead.length / totalSentences) * 100);
+            const taskPercentage = Math.round((tasksCompleted.length / totalTasks) * 100);
+            
+            const shareText = `🌈 Hasil Belajar: Pelangi di Pagi Hari\n\n` +
+                            `📖 Membaca: ${readPercentage}% selesai\n` +
+                            `✅ Tugas: ${taskPercentage}% selesai\n` +
+                            `⭐ Status: ${readPercentage === 100 && taskPercentage === 100 ? 'Sempurna!' : 'Terus Belajar!'}\n\n` +
+                            `Ayo belajar membaca bersama! 📚`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Kemajuan Belajarku',
+                    text: shareText
+                }).then(() => {
+                    speak("Kemajuan berhasil dibagikan!");
+                }).catch(() => {
+                    copyToClipboard(shareText);
+                });
+            } else {
+                copyToClipboard(shareText);
+            }
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            alert('✅ Kemajuan belajar sudah disalin! Kamu bisa tempelkan di aplikasi lain.');
+            speak("Kemajuan belajar sudah disalin!");
+        }
+
+        function speak(text, onEnd) {
+            if (speechSynth.speaking) {
+                speechSynth.cancel();
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            utterance.rate = 0.85;
+            utterance.pitch = 1.1;
+            utterance.volume = 1.0;
+            
+            if (onEnd) {
+                utterance.onend = onEnd;
+            }
+            
+            speechSynth.speak(utterance);
+        }
+
+        function stopSpeaking() {
+            if (speechSynth.speaking) {
+                speechSynth.cancel();
+            }
+        }
+
+        // Auto-update stats setiap 30 detik
+        setInterval(() => {
+            if (document.getElementById('feedback').classList.contains('active')) {
+                updateFeedbackStats();
+            }
+        }, 30000);
+
+        // Sambutan awal
+        window.onload = function() {
+            setTimeout(() => {
+                speak("Selamat datang! Mari kita belajar membaca cerita tentang pelangi bersama-sama!");
+            }, 1000);
+        };
+
+        // Prevent page unload jika masih ada progress
+        window.addEventListener('beforeunload', function(e) {
+            if (sentencesRead.length > 0 || tasksCompleted.length > 0) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>
